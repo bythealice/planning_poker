@@ -38,7 +38,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <section className="w-full max-w-107.5 rounded-2xl border border-white/10 bg-[#0e121b]/95 p-8 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+      <section className="w-full max-w-login-card rounded-2xl border border-login-card-border bg-login-card p-8 text-login-card-foreground shadow-2xl shadow-black/40">
         <div className="mb-8 flex justify-center">
           <Image
             src={copy.brand.logoSrc}
@@ -52,7 +52,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
 
         <div className="space-y-5">
           <div className="space-y-2">
-            <label htmlFor="login-name" className="text-xs font-semibold tracking-[0.16em] text-zinc-300">
+            <label htmlFor="login-name" className="text-xs font-semibold tracking-[0.16em] text-login-label">
               {copy.fields.name.label}
             </label>
             <Input
@@ -60,13 +60,13 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               value={form.name}
               onChange={(event) => actions.onNameChange(event.target.value)}
               placeholder={copy.fields.name.placeholder}
-              className="h-14 rounded-xl border-white/5 bg-[#151b26] px-4 text-base text-zinc-100 placeholder:text-zinc-500"
+              className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
             />
-            {form.nameError && <p className="text-sm text-red-400" role="alert">{form.nameError}</p>}
+            {form.nameError && <p className="text-sm text-destructive" role="alert">{form.nameError}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="login-email" className="text-xs font-semibold tracking-[0.16em] text-zinc-300">
+            <label htmlFor="login-email" className="text-xs font-semibold tracking-[0.16em] text-login-label">
               {copy.fields.email.label}
             </label>
             <Input
@@ -75,19 +75,19 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               value={form.email}
               onChange={(event) => actions.onEmailChange(event.target.value)}
               placeholder={copy.fields.email.placeholder}
-              className="h-14 rounded-xl border-white/5 bg-[#151b26] px-4 text-base text-zinc-100 placeholder:text-zinc-500"
+              className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
             />
-            {form.emailError && <p className="text-sm text-red-400" role="alert">{form.emailError}</p>}
-            <div className="flex items-center gap-2 rounded-md bg-[#1b2231] px-3 py-2 text-sm text-zinc-300">
-              <Info className="size-4 text-[#20dbc6]" aria-hidden />
+            {form.emailError && <p className="text-sm text-destructive" role="alert">{form.emailError}</p>}
+            <div className="flex items-center gap-2 rounded-md bg-login-helper px-3 py-2 text-sm text-login-helper-foreground">
+              <Info className="size-4 text-login-accent" aria-hidden />
               <span>{copy.fields.email.helper}</span>
             </div>
           </div>
 
-          <div className="h-px bg-white/20" />
+          <div className="h-px bg-login-card-border" />
 
           <div className="space-y-2">
-            <label htmlFor="room-code" className="text-xs font-semibold tracking-[0.16em] text-zinc-300">
+            <label htmlFor="room-code" className="text-xs font-semibold tracking-[0.16em] text-login-label">
               {copy.fields.roomCode.label}
             </label>
             <Input
@@ -96,12 +96,12 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               onChange={(event) => actions.onRoomCodeChange(event.target.value)}
               placeholder={copy.fields.roomCode.placeholder}
               maxLength={8}
-              className="h-14 rounded-xl border-white/5 bg-[#151b26] px-4 text-base uppercase text-zinc-100 placeholder:text-zinc-500"
+              className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base uppercase text-login-field-foreground placeholder:text-login-field-placeholder"
             />
-            {form.roomCodeError && <p className="text-sm text-red-400" role="alert">{form.roomCodeError}</p>}
+            {form.roomCodeError && <p className="text-sm text-destructive" role="alert">{form.roomCodeError}</p>}
           </div>
 
-          <label htmlFor="observer-mode" className="flex cursor-pointer items-center justify-between py-1 text-zinc-200">
+          <label htmlFor="observer-mode" className="flex cursor-pointer items-center justify-between py-1 text-login-card-foreground">
             <span>{copy.fields.observer.label}</span>
             <span className="relative inline-flex items-center">
               <input
@@ -111,20 +111,20 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 onChange={(event) => actions.onObserverChange(event.target.checked)}
                 className="peer sr-only"
               />
-              <span className="h-6 w-11 rounded-full bg-zinc-600 transition-colors peer-checked:bg-[#17d9c4]" />
-              <span className="pointer-events-none absolute left-1 size-4 rounded-full bg-white transition-transform peer-checked:translate-x-5" />
+              <span className="h-6 w-11 rounded-full bg-login-toggle-track transition-colors peer-checked:bg-login-accent" />
+              <span className="pointer-events-none absolute left-1 size-4 rounded-full bg-login-toggle-thumb transition-transform peer-checked:translate-x-5" />
             </span>
           </label>
 
-          {status.error && <p className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-300" role="alert">{status.error}</p>}
-          {status.success && <p className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300" role="status">{status.success}</p>}
+          {status.error && <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">{status.error}</p>}
+          {status.success && <p className="rounded-md bg-login-success/10 px-3 py-2 text-sm text-login-success" role="status">{status.success}</p>}
 
           <div className="space-y-3 pt-2">
             <Button
               type="button"
               onClick={actions.onCreateRoom}
               disabled={!status.canCreateRoom}
-              className="h-14 w-full rounded-xl bg-[#15d2be] text-lg font-semibold text-[#05130f] hover:bg-[#2ce4d1]"
+              className="h-14 w-full rounded-xl bg-login-accent text-lg font-semibold text-login-accent-foreground hover:bg-login-accent/90"
             >
               {loadingLabel ?? copy.buttons.createRoom}
             </Button>
@@ -132,7 +132,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               type="button"
               onClick={actions.onJoinWithCode}
               disabled={!status.canJoinWithCode}
-              className="h-14 w-full rounded-xl border border-white/5 bg-[#151b26] text-lg font-semibold text-zinc-100 hover:bg-[#1b2231]"
+              className="h-14 w-full rounded-xl border border-login-card-border bg-login-field text-lg font-semibold text-login-card-foreground hover:bg-login-helper"
             >
               {loadingLabel ?? copy.buttons.joinRoom}
             </Button>
@@ -140,7 +140,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
         </div>
       </section>
 
-      <footer className="mt-8 text-xs text-zinc-500">
+      <footer className="mt-8 text-xs text-login-footer">
         {copy.footer.prefix} <span className="mx-2">{copy.footer.separator}</span> {copy.footer.linkLabel}
       </footer>
     </div>

@@ -10,6 +10,23 @@
   --font-sans: var(--font-sora);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-heading: var(--font-sora);
+  --spacing-login-card: var(--login-card-width);
+  --color-login-bg: var(--login-bg);
+  --color-login-card: var(--login-card);
+  --color-login-card-foreground: var(--login-card-foreground);
+  --color-login-card-border: var(--login-card-border);
+  --color-login-field: var(--login-field);
+  --color-login-field-foreground: var(--login-field-foreground);
+  --color-login-field-placeholder: var(--login-field-placeholder);
+  --color-login-helper: var(--login-helper);
+  --color-login-helper-foreground: var(--login-helper-foreground);
+  --color-login-label: var(--login-label);
+  --color-login-footer: var(--login-footer);
+  --color-login-accent: var(--login-accent);
+  --color-login-accent-foreground: var(--login-accent-foreground);
+  --color-login-toggle-track: var(--login-toggle-track);
+  --color-login-toggle-thumb: var(--login-toggle-thumb);
+  --color-login-success: var(--login-success);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +66,8 @@
 }
 
 :root {
+  --font-sora: "Sora", sans-serif;
+  --font-space-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -81,6 +100,26 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --login-card-width: 26.875rem;
+  --login-bg: #060b12;
+  --login-card: #0e121b;
+  --login-card-foreground: #f4f7fb;
+  --login-card-border: rgb(255 255 255 / 10%);
+  --login-field: #151b26;
+  --login-field-foreground: #f4f7fb;
+  --login-field-placeholder: #71717a;
+  --login-helper: #1b2231;
+  --login-helper-foreground: #cbd5e1;
+  --login-label: #d4d4d8;
+  --login-footer: #71717a;
+  --login-accent: #15d2be;
+  --login-accent-foreground: #05130f;
+  --login-toggle-track: #52525b;
+  --login-toggle-thumb: #ffffff;
+  --login-success: #10b981;
+  --login-grid-glow: rgb(21 210 190 / 24%);
+  --login-grid-lines: rgb(25 39 56 / 45%);
 }
 
 .dark {
@@ -121,21 +160,25 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
-    @apply bg-background text-foreground;
+    @apply bg-login-bg text-login-card-foreground;
   }
   html {
-    @apply font-sans;
+    @apply min-h-full font-sans;
+  }
+  body {
+    @apply min-h-dvh;
   }
 }
 
 @layer utilities {
-  .poker-grid-bg {
-    background-color: #060b12;
+  .login-grid-bg {
+    background-color: var(--login-bg);
     background-image:
-      radial-gradient(circle at 50% 20%, rgb(20 222 194 / 24%), transparent 38%),
-      linear-gradient(rgb(25 39 56 / 45%) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(25 39 56 / 45%) 1px, transparent 1px);
+      radial-gradient(circle at 50% 20%, var(--login-grid-glow), transparent 38%),
+      linear-gradient(var(--login-grid-lines) 1px, transparent 1px),
+      linear-gradient(90deg, var(--login-grid-lines) 1px, transparent 1px);
     background-size: 100% 100%, 60px 60px, 60px 60px;
   }
 }

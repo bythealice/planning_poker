@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${soraSans.variable} ${spaceMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col font-sans">
+      <body className="flex min-h-dvh flex-col overflow-x-hidden bg-login-bg font-sans text-login-card-foreground antialiased">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
