@@ -17,12 +17,19 @@
 /.next/
 /out/
 
+# jetbrains
+.idea/
+
 # production
 /build
 
 # misc
 .DS_Store
 *.pem
+
+# markdown docs (keep only project README)
+*.md
+!README.md
 
 # debug
 npm-debug.log*
