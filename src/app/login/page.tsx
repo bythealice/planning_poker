@@ -1,9 +1,9 @@
-import { LoginForm } from "@/features/auth";
+import { LoginViewModel } from "@/features/auth";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <LoginForm />
+    <main className="poker-grid-bg flex min-h-screen flex-col items-center justify-center px-4 py-8 text-zinc-100">
+      <LoginViewModel />
     </main>
   );
 }

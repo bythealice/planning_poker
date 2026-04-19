@@ -1,10 +1,5 @@
-import { z } from "zod";
-
-export const loginSchema = z.object({
-  email: z.string().trim().email("Digite um e-mail valido."),
-});
-
-export type LoginFormData = z.infer<typeof loginSchema>;
+export { loginSchema } from "./login-schema";
+export type { LoginFormData } from "./login-schema";
 
 export type AuthSession = {
   token: string;

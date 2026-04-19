@@ -28,7 +28,32 @@ src/
 │   └── ui/
 └── features/
 	├── auth/
+	│   ├── components/
+	│   │   └── login-view.tsx
+	│   ├── content/
+	│   │   └── login-copy.ts
+	│   ├── hooks/
+	│   │   └── use-login-model.ts
+	│   ├── types/
+	│   │   ├── login-schema.ts
+	│   │   └── index.ts
+	│   ├── utils/
+	│   │   └── room-code.ts
+	│   ├── login-view-model.tsx
+	│   └── index.ts
 	└── payments/
+
+## Auth como módulo reutilizavel
+
+O modulo `auth` foi dividido em tres camadas para facilitar reuso em outros projetos:
+
+- `login-view.tsx`: somente JSX e props agrupadas, sem regra de negocio.
+- `use-login-model.ts`: estado, validacao, normalizacao e acoes mockadas.
+- `login-view-model.tsx`: composicao entre View + Model e ponto de entrada da feature.
+- `content/login-copy.ts`: textos e copy visual centralizados.
+- `utils/room-code.ts`: helpers puros reutilizaveis.
+
+A ideia e que a View seja portavel para outro design system, enquanto a Model permanece reutilizavel como contrato de comportamento.
 ```
 
 ## Rodando local
