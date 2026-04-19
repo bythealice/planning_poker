@@ -37,9 +37,12 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
   const loadingLabel = status.isLoading ? copy.buttons.loading : null;
 
   return (
-    <div className="flex w-full flex-col items-center">
-      <section className="w-full max-w-login-card rounded-2xl border border-login-card-border bg-login-card p-8 text-login-card-foreground shadow-2xl shadow-black/40">
-        <div className="mb-8 flex justify-center">
+    <div className="flex w-full flex-col items-center" data-cy="login-view">
+      <section
+        className="w-full max-w-login-card rounded-2xl border border-login-card-border bg-login-card p-8 text-login-card-foreground shadow-2xl shadow-black/40"
+        data-cy="login-card"
+      >
+        <div className="mb-8 flex justify-center" data-cy="login-brand">
           <Image
             src={copy.brand.logoSrc}
             alt={copy.brand.logoAlt}
@@ -57,6 +60,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
             </label>
             <Input
               id="login-name"
+              data-cy="login-name"
               value={form.name}
               onChange={(event) => actions.onNameChange(event.target.value)}
               placeholder={copy.fields.name.placeholder}
@@ -72,6 +76,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
             <Input
               id="login-email"
               type="email"
+              data-cy="login-email"
               value={form.email}
               onChange={(event) => actions.onEmailChange(event.target.value)}
               placeholder={copy.fields.email.placeholder}
@@ -92,6 +97,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
             </label>
             <Input
               id="room-code"
+              data-cy="login-room-code"
               value={form.roomCode}
               onChange={(event) => actions.onRoomCodeChange(event.target.value)}
               placeholder={copy.fields.roomCode.placeholder}
@@ -107,6 +113,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               <input
                 id="observer-mode"
                 type="checkbox"
+                data-cy="login-observer-mode"
                 checked={form.isObserver}
                 onChange={(event) => actions.onObserverChange(event.target.checked)}
                 className="peer sr-only"
@@ -122,6 +129,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
           <div className="space-y-3 pt-2">
             <Button
               type="button"
+              data-cy="login-create-room"
               onClick={actions.onCreateRoom}
               disabled={!status.canCreateRoom}
               className="h-14 w-full rounded-xl bg-login-accent text-lg font-semibold text-login-accent-foreground hover:bg-login-accent/90"
@@ -130,6 +138,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
             </Button>
             <Button
               type="button"
+              data-cy="login-join-room"
               onClick={actions.onJoinWithCode}
               disabled={!status.canJoinWithCode}
               className="h-14 w-full rounded-xl border border-login-card-border bg-login-field text-lg font-semibold text-login-card-foreground hover:bg-login-helper"
@@ -140,7 +149,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
         </div>
       </section>
 
-      <footer className="mt-8 text-xs text-login-footer">
+      <footer className="mt-8 text-xs text-login-footer" data-cy="login-footer">
         {copy.footer.prefix} <span className="mx-2">{copy.footer.separator}</span> {copy.footer.linkLabel}
       </footer>
     </div>

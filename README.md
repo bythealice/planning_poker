@@ -76,8 +76,34 @@ npm run dev
 ```bash
 npm run lint
 npm run typecheck
+npm run typecheck:cypress
 npm run build
 ```
+
+## Cypress
+
+O projeto já vem com Cypress configurado para:
+
+- `e2e`: fluxo completo da tela de login em `cypress/e2e/login.cy.ts`
+- `component`: teste isolado da View em `cypress/component/login-view.cy.tsx`
+
+Comandos principais:
+
+```bash
+npm run cy:open
+npm run cy:run:e2e
+npm run cy:run:component
+npm run test:e2e
+npm run test:component
+```
+
+O suporte de testes inclui:
+
+- `cypress/support/commands.ts`: comandos reutilizáveis como `getByCy` e `visitLogin`
+- `cypress/support/component.ts`: montagem da View com CSS global carregado
+- `cypress/support/component-index.html`: container base exigido pelo runner de component testing
+- `cypress/support/mocks/next-image.tsx`: mock do `next/image` para testes de componente
+- `vite.config.ts`: alias `@` e stub do `next/image` para o component testing
 
 ## Docker
 
