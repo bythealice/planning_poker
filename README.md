@@ -1,264 +1,369 @@
-# Planning Poker
+<div align="center">
+  <img src="./public/LogoName.png" alt="Planning Poker" width="280" />
 
-Plataforma de estimativa agil criada para resolver uma dor real de time: **estimar backlog sem friccao operacional**.
+  <br />
+  <br />
 
-> Este repositorio nao e apenas uma implementacao de interface. Ele documenta um experimento de produto + arquitetura para validar se MVVM, aplicado de forma pragmatica, melhora velocidade de evolucao e qualidade de uso em sessoes reais.
+![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
-## Indice
+  <br />
 
-- [1) Contexto da descoberta](#1-contexto-da-descoberta)
-- [2) Problema que estamos atacando](#2-problema-que-estamos-atacando)
-- [3) Hipotese de produto e engenharia](#3-hipotese-de-produto-e-engenharia)
-- [4) Tese do produto](#4-tese-do-produto)
-- [5) Principios de design e experiencia](#5-principios-de-design-e-experiencia)
-- [6) Arquitetura e decisoes tecnicas](#6-arquitetura-e-decisoes-tecnicas)
-- [7) Fluxo alvo com Jira](#7-fluxo-alvo-com-jira)
-- [8) Estado atual validado](#8-estado-atual-validado)
-- [9) Riscos e perguntas abertas](#9-riscos-e-perguntas-abertas)
-- [10) Roadmap por ondas](#10-roadmap-por-ondas)
-- [11) Stack atual](#11-stack-atual)
-- [12) Como rodar localmente](#12-como-rodar-localmente)
-- [13) Qualidade e testes](#13-qualidade-e-testes)
-- [14) Estrutura do projeto](#14-estrutura-do-projeto)
-- [15) Contribuicao](#15-contribuicao)
+![Zustand](https://img.shields.io/badge/Zustand_5-000000?style=for-the-badge&logo=react&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod_4-3E67B1?style=for-the-badge&logo=zod&logoColor=white)
+![React Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
 
-## 1) Contexto da descoberta
+  <br />
 
-Este projeto nasce de duas frentes que normalmente andam separadas:
+![Cypress](https://img.shields.io/badge/Cypress_14-17202C?style=for-the-badge&logo=cypress&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
 
-1. **Descoberta tecnica**: validar MVVM na pratica para decidir se o time adota esse padrao como base de features futuras.
-2. **Descoberta de produto**: eliminar atritos que tornam Planning Poker cansativo em ferramentas atuais.
+  <br />
+  <br />
 
-A pergunta central foi:
+  <p><em>Estimativa ágil sem fricção. Sem cadastro obrigatório. Sem rotatividade de email. Sem planos pagos.</em></p>
 
-**Como transformar estimativa em um fluxo continuo (entender issue -> discutir -> estimar -> registrar), sem exigir burocracia para comecar?**
+</div>
 
-## 2) Problema que estamos atacando
+<br />
 
-Em rotinas reais de sprint planning, vimos um padrao repetido:
+## Como tudo começou
 
-- tempo perdido para abrir e configurar sessao;
-- UX confusa para quem so quer entrar e estimar;
-- limitacoes de uso por plano gratuito em ferramentas terceiras;
-- retrabalho de copiar contexto e resultado entre sala de estimativa e Jira.
+Todo sprint, a mesma sequência. Alguém tenta abrir o Planning Poker, a ferramenta pede login, o plano gratuito bateu no limite, precisa criar um email novo, outro integrante não consegue entrar, a reunião atrasa quinze minutos, e a estimativa que deveria ser uma conversa sobre complexidade vira uma operação de suporte técnico.
 
-Resultado: a dinamica de estimativa deixa de ser uma conversa sobre valor e vira operacao de ferramenta.
+Em algum momento, o time parou e fez a pergunta óbvia: por que uma ferramenta tão simples precisa ser tão cara e tão cheia de atrito?
 
-## 3) Hipotese de produto e engenharia
+A resposta foi que não precisava. Então começamos a construir a nossa.
 
-Hipotese de validacao deste repositorio:
+O projeto nasceu com dois objetivos que normalmente andam separados. O primeiro é de produto: eliminar cada ponto de fricção que transforma estimativa em burocracia. O segundo é técnico: validar MVVM aplicado de forma pragmática como padrão para features futuras do time. Os dois caminham juntos aqui.
 
-1. **Se** a regra de negocio ficar separada da camada visual (MVVM),
-2. **e se** o fluxo de entrada for guest-first,
-3. **e se** o fechamento da estimativa voltar ao Jira sem friccao,
+<br />
 
-**entao** teremos maior adesao do time, menor custo operacional e evolucao de codigo mais previsivel.
+## O que a gente estava cansado de fazer
 
-## 4) Tese do produto
+Identificamos um padrão que se repetia toda semana. Tempo perdido abrindo e configurando sessão. Rotatividade de email para driblar limite de plano gratuito. UX confusa para quem só quer entrar e votar. Retrabalho de copiar o contexto do Jira para a sala. E a estimativa final que não voltava automaticamente para o ticket — alguém sempre precisava lembrar de atualizar na mão.
 
-Nosso posicionamento:
+O efeito mais silencioso de tudo isso é que a dinâmica de estimativa para de ser uma conversa sobre valor e vira uma operação de ferramenta.
 
-- Estimar nao deveria exigir conta obrigatoria.
-- Conta deve existir, mas como opcional para historico e continuidade.
-- O host precisa trabalhar com contexto da issue dentro da sala.
-- A estimativa final precisa retornar ao Jira com o minimo de passos.
+<br />
 
-Em uma frase: **menos ritual de ferramenta, mais foco na decisao de produto/engenharia.**
+## O que estamos testando
 
-## 5) Principios de design e experiencia
+A hipótese que guia o projeto é direta. Se a regra de negócio ficar separada da camada visual, e se o fluxo de entrada não exigir cadastro, e se o contexto da issue viajar do Jira direto para a sala, e se a estimativa final voltar ao ticket sem nenhum passo extra — então o time vai aderir, o custo operacional vai cair, e o código vai ser mais fácil de evoluir.
 
-- **Guest-first**: entrar na sala em segundos.
-- **Account-optional**: conta para historico, nao para bloquear participacao.
-- **Context-in-room**: trazer a issue para dentro da conversa.
-- **Host-driven closeout**: consolidar e publicar resultado sem retrabalho.
-- **Low-friction UI**: reduzir cliques e mudanca de tela em fluxo critico.
+É isso que estamos validando em sessões reais.
 
-## 6) Arquitetura e decisoes tecnicas
+<br />
 
-### 6.1 Decisao arquitetural principal: MVVM por feature
+## Princípios que guiam cada decisão
 
-A aplicacao foi estruturada em torno de features (`auth`, `rooms`) com separacao explicita:
+**Guest-first.** Entrar na sala em segundos, sem cadastro. A conta existe para quem quer salvar histórico, não para bloquear quem só quer estimar.
 
-- `View`: composicao visual e acessibilidade;
-- `Model`: estado, validacao, regras e efeitos;
-- `ViewModel`: ponte entre contrato visual e comportamento.
+**Context-in-room.** A issue do Jira viaja para dentro da sala. O time vota com o título e a descrição visíveis, sem abrir outra aba.
 
-Isso permite:
+**Host-driven closeout.** O host revela as cartas, consolida a estimativa e publica no Jira. Tudo dentro da mesma tela, sem retrabalho.
 
-- trocar UI sem quebrar regra de negocio;
-- evoluir comportamento mantendo contratos claros;
-- testar fluxo com maior previsibilidade.
+**Zero rotatividade de email.** Uma URL, qualquer pessoa do time entra. Fim.
 
-### 6.2 Diagrama de camadas
+<br />
+
+## Arquitetura e decisões técnicas
+
+### MVVM por feature
+
+A aplicação é organizada em torno de features com separação explícita de responsabilidades. A View cuida da composição visual e acessibilidade. O ViewModel faz a ponte entre o contrato visual e o comportamento. O Model concentra estado, validação, regras e efeitos colaterais.
+
+Isso significa que dá para trocar a UI sem quebrar regra de negócio, evoluir comportamento sem mexer em componente, e testar fluxo com previsibilidade real.
 
 ```mermaid
 flowchart LR
-  APP[app routes pages] --> VM[ViewModel]
-  VM --> VIEW[View components]
-  VM --> MODEL[Model hooks]
+  APP[app / routes / pages] --> VM[ViewModel]
+  VM --> VIEW[View — components]
+  VM --> MODEL[Model — hooks]
   MODEL --> SCHEMA[Zod schemas]
-  MODEL --> SERVICES[Services API]
+  MODEL --> SERVICES[Services — API]
   MODEL --> STORE[Zustand store]
-  SERVICES --> CLIENT[API client]
-  VIEW --> UI[shared ui]
-  VM --> COPY[content copy]
+  SERVICES --> CLIENT[API client — Axios]
+  VIEW --> UI[shared / ui]
+  VM --> COPY[content / copy]
 ```
 
-### 6.3 Diagrama de descoberta para entrega
+### Por que Zustand e não Redux
+
+Redux foi avaliado. A decisão foi deliberada.
+
+O estado do Planning Poker não é complexo o suficiente para justificar a estrutura do Redux. São basicamente `room`, `participants`, `rounds` e `votes`. O Appwrite Realtime já cuida da sincronização entre clientes — o store Zustand vira um espelho local limpo do que chega pelo WebSocket. O bundle do Zustand é de ~3kb contra ~47kb do Redux, e o boilerplate cai pra quase zero.
+
+A separação por feature já está feita. Se o projeto crescer ao ponto de precisar do Redux, a migração não exige reescrever a arquitetura.
+
+<br />
+
+## Fluxo de telas
 
 ```mermaid
 flowchart TD
-  P[Problema real do time] --> H[Hipotese MVVM + UX]
-  H --> M[MVP em producao interna]
-  M --> V[Validacao em sessoes reais]
-  V --> D{Aprovado pelo time?}
-  D -->|Sim| S[Escalar padrao para novas features]
-  D -->|Nao| R[Refinar arquitetura e fluxo]
+    A([Acessa o app]) --> B{Tem código\nde sala?}
+
+    B -- Não --> C[Tela de Entrada\nCria nova sala como host]
+    B -- Sim --> D[Tela de Entrada\nEntra com código]
+
+    C --> C1[Preenche nome\nE-mail opcional — salva histórico]
+    C1 --> E[Tela de Configuração\nExclusiva do host]
+
+    D --> D1[Preenche nome\nE-mail opcional]
+    D1 --> D2{Entrar como\nobservador?}
+    D2 -- Não --> F[Tela de Votação\nParticipante]
+    D2 -- Sim --> F2[Tela de Votação\nObservador — sem cartas]
+
+    E --> E1[Configura deck\nFibonacci / T-Shirt / Powers of 2]
+    E1 --> E2[Configura exibição\nTítulo visível, contador, votos]
+    E2 --> E3[Revelação\nSó host ou qualquer participante]
+    E3 --> E4[Timer por rodada\nOpcional]
+    E4 --> E5[Abre sala\nGera link e QR code]
+    E5 --> G[Tela de Votação\nHost]
+
+    G --> G1[Cola número do ticket\nBusca no Jira via Appwrite Function]
+    G1 --> G2[Título e descrição\npreenchidos automaticamente]
+    G2 --> G3[Inicia rodada]
+
+    F --> F1[Vê história se host habilitou]
+    F1 --> F3[Escolhe carta e aguarda revelação]
+
+    G3 --> G4[Acompanha votos em tempo real]
+    G4 --> G5{Todos votaram?}
+    G5 -- Não --> G4
+    G5 -- Sim --> G6[Host revela as cartas]
+
+    G6 --> H[Tela de Revelação]
+    F3 --> H
+
+    H --> H1[Cartas reveladas\nOutliers destacados]
+    H1 --> H2{Divergência\ngrande?}
+    H2 -- Sim --> H3[Banner de alerta\nDiscussão do time]
+    H3 --> H4[Host define estimativa final]
+    H2 -- Não --> H4
+
+    H4 --> H5{Salvar no Jira?}
+    H5 -- Sim --> H6[PATCH story points\nno ticket]
+    H5 -- Não --> H7
+
+    H6 --> H7{Nova rodada?}
+    H7 -- Sim --> G3
+    H7 -- Não --> H8[Histórico da sessão\nExportar CSV]
 ```
 
-### 6.4 Decisoes tecnicas implementadas
+<br />
 
-- Feature-first (`src/features`) para manter dominio coeso.
-- Validacao com `zod` + `react-hook-form` para contrato de formulario.
-- Sessao local com `zustand` para continuidade de uso.
-- Servico de auth com fallback demo para nao bloquear evolucao de UX.
-- Testes E2E e component com Cypress para proteger fluxo principal.
-
-## 7) Fluxo alvo com Jira
-
-A integracao com Jira e um pilar do produto, nao um extra cosmetico.
-
-### 7.1 Fluxo pretendido
+## Arquitetura técnica
 
 ```mermaid
 flowchart LR
-  Issue[Jira issue] --> Import[Importar titulo descricao]
-  Import --> Session[Sessao de estimativa]
-  Session --> Reveal[Revelacao consolidacao]
-  Reveal --> Host[Host confirma valor]
-  Host --> Publish[Publicar estimativa no Jira]
+    subgraph Frontend ["Frontend — Next.js + React"]
+        UI[Componentes React]
+        RT[Appwrite Realtime SDK]
+        DB_SDK[Appwrite Database SDK]
+    end
+
+    subgraph Appwrite ["Backend — Appwrite"]
+        direction TB
+        REAL[Realtime\nWebSocket channels]
+        DATABASE[(Database\nPostgreSQL)]
+        FUNC[Functions\nNode.js]
+
+        subgraph Collections
+            ROOMS[rooms]
+            PARTICIPANTS[participants]
+            ROUNDS[rounds]
+            VOTES[votes]
+        end
+
+        DATABASE --> Collections
+    end
+
+    subgraph Jira ["Jira Cloud"]
+        JIRA_API[REST API v3\n*.atlassian.net]
+    end
+
+    UI --> RT
+    UI --> DB_SDK
+    RT <--> REAL
+    DB_SDK <--> DATABASE
+
+    UI -- "GET /ticket/PROJ-123" --> FUNC
+    FUNC -- "Basic Auth\nAPI Token em env var" --> JIRA_API
+    JIRA_API -- "summary + description" --> FUNC
+    FUNC -- "retorna dados limpos" --> UI
+
+    UI -- "PATCH story points\napós confirmação do host" --> FUNC
+    FUNC --> JIRA_API
+
+    REAL -- "broadcast votos\nentrada saída revelação" --> RT
 ```
 
-### 7.2 Resultado esperado
+<br />
 
-- menos troca de contexto;
-- menos copia e cola;
-- maior rastreabilidade entre discussao e estimativa final.
+## O que acontece por baixo em tempo real
 
-## 8) Estado atual validado
+```mermaid
+sequenceDiagram
+    participant H as Host
+    participant AW as Appwrite Realtime
+    participant P1 as Participante 1
+    participant P2 as Participante 2
 
-### 8.1 O que ja existe no codigo
+    H->>AW: Cria sala
+    AW-->>P1: Subscribe no channel
+    AW-->>P2: Subscribe no channel
 
-- Rotas de acesso: `/login`, `/signup`, `/forgot-password`, `/rooms/[code]`.
-- Modo visitante e modo conta no fluxo de entrada.
-- Etapa de sala apos autenticacao no fluxo de conta.
-- Configuracao de sala com persistencia local de preferencias.
-- Sessao local com `zustand`.
-- Cobertura Cypress para fluxo de login (E2E + component).
+    P1->>AW: Entra na sala
+    AW-->>H: Novo participante
+    AW-->>P2: Novo participante
 
-### 8.2 O que esta parcial
+    H->>AW: Inicia rodada
+    AW-->>P1: Rodada iniciada
+    AW-->>P2: Rodada iniciada
 
-- Autenticacao: existe tentativa via API e fallback demo no servico.
-- Experiencia de sala: base pronta, sem backend real-time completo.
+    P1->>AW: Vota
+    AW-->>H: P1 votou ✓
+    AW-->>P2: P1 votou ✓
 
-### 8.3 O que ainda e planejado
+    P2->>AW: Vota
+    AW-->>H: P2 votou ✓
 
-- Integracao Jira (importar contexto + publicar estimativa).
-- Motor de rodada sincronizado entre participantes.
+    H->>AW: Revela
+    AW-->>P1: Votos revelados
+    AW-->>P2: Votos revelados
 
-## 9) Riscos e perguntas abertas
+    H->>AW: Define estimativa final
+    AW-->>P1: Estimativa confirmada
+    AW-->>P2: Estimativa confirmada
+```
 
-- Qual o nivel de acoplamento aceitavel entre feature e copy para escalar internacionalizacao?
-- Quais limites de estado local antes de migrar partes para server state em tempo real?
-- Como equilibrar guest-first com governanca de historico e auditoria?
-- Qual recorte minimo de Jira entrega valor sem complexidade excessiva?
+<br />
 
-## 10) Roadmap por ondas
+## Integração com Jira
 
-### Onda 1 - Consolidacao do MVP (curto prazo)
+A integração não é um extra cosmético. É um pilar. O objetivo é acabar com a troca de contexto entre a ferramenta de estimativa e o backlog.
 
-- [x] Fluxo de entrada visitante/conta
-- [x] Cadastro e recuperacao de senha (camada de UI/model)
-- [x] Configuracao de sala
-- [x] Base de testes Cypress
-- [ ] Ajustes finais de experiencia e mensagens de fluxo
+```mermaid
+flowchart LR
+    Issue[Jira issue] --> Import[Appwrite Function\nbusca título e descrição]
+    Import --> Session[Sala de estimativa\ncontexto visível para o time]
+    Session --> Reveal[Revelação e consolidação]
+    Reveal --> Host[Host confirma estimativa]
+    Host --> Publish[PATCH no Jira\nstory points atualizados]
+```
 
-### Onda 2 - Sessao colaborativa real-time
+O Jira Cloud usa API Token gerado em `id.atlassian.com/manage-profile/security/api-tokens`. As credenciais ficam em variáveis de ambiente na Appwrite Function — nunca no frontend. O CORS do Jira bloqueia chamadas diretas do browser, então a Function atua como proxy seguro entre o cliente e a API do Jira.
 
-- [ ] Backend de sala e participantes
-- [ ] Presenca em tempo real (join/leave)
-- [ ] Estado de rodada sincronizado
-- [ ] Regras de host e permissoes
+<br />
 
-### Onda 3 - Jira-first workflow
+## Schema do banco
 
-- [ ] Conexao com workspace/projeto Jira
-- [ ] Importacao de titulo/descricao para contexto da sala
-- [ ] Publicacao da estimativa final pelo host
-- [ ] Tratamento de falhas e retries no envio
+```mermaid
+erDiagram
+    rooms {
+        string id PK
+        string name
+        string code UK
+        string host_id
+        string deck_type
+        boolean show_title
+        boolean show_counter
+        string reveal_control
+        integer timer_seconds
+        string status
+        datetime created_at
+    }
 
-### Onda 4 - Escala e inteligencia de produto
+    participants {
+        string id PK
+        string room_id FK
+        string name
+        string email
+        boolean is_observer
+        boolean is_host
+        datetime joined_at
+    }
 
-- [ ] Historico por sala/time
-- [ ] Metricas de convergencia de estimativas
-- [ ] Observabilidade (logs, traces, dashboards)
-- [ ] Pipeline de qualidade para CI/CD
+    rounds {
+        string id PK
+        string room_id FK
+        string jira_ticket
+        string title
+        string status
+        string final_estimate
+        datetime created_at
+    }
 
-## 11) Stack atual
+    votes {
+        string id PK
+        string round_id FK
+        string participant_id FK
+        string value
+        datetime voted_at
+    }
 
-### Frontend
+    rooms ||--o{ participants : "tem"
+    rooms ||--o{ rounds : "tem"
+    rounds ||--o{ votes : "tem"
+    participants ||--o{ votes : "faz"
+```
 
-- Next.js (App Router)
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- shadcn/ui
-- lucide-react
+<br />
 
-### Estado, formularios e dados
+## O que já está feito e o que vem
 
-- Zustand
-- React Hook Form
-- Zod
-- Axios
-- TanStack React Query
+O projeto está organizado em ondas. A primeira consolida o MVP — fluxo de entrada com modo visitante e modo conta, cadastro e recuperação de senha, configuração de sala, estado local com Zustand e cobertura inicial com Cypress. A maior parte está pronta, os ajustes finais de UX estão em andamento.
 
-### Qualidade
+A segunda onda conecta o backend realtime: sala e participantes via Appwrite, presença em tempo real, estado de rodada sincronizado entre todos os clientes, regras de host, timer por rodada e modo observador.
 
-- ESLint
-- Cypress (E2E + Component)
-- Typecheck (app + cypress)
+A terceira onda é onde a integração com Jira entra de verdade: busca de ticket por número, importação de título e descrição para o contexto da sala, publicação da estimativa final no ticket pelo host e tratamento de falhas no envio.
 
-### Infra
+A quarta onda é sobre escala e inteligência: histórico por sala e time, métricas de convergência de estimativas, exportação de sessão em CSV, QR code de sala, observabilidade e pipeline de CI/CD.
 
-- Dockerfile
-- Docker Compose
+<br />
 
-## 12) Como rodar localmente
+## Stack
 
-1) Copiar variaveis de ambiente:
+**Frontend:** Next.js 16 com App Router, React 19, TypeScript 5, Tailwind CSS 4 e shadcn/ui.
+
+**Estado, formulários e dados:** Zustand 5 para estado global, React Hook Form com Zod 4 para formulários e validação, TanStack Query 5 para cache e dados assíncronos, Axios para HTTP.
+
+**Qualidade:** Cypress 14 para E2E e testes de componente, ESLint 9, typecheck configurado tanto para app quanto para Cypress.
+
+**Infraestrutura:** Docker com Docker Compose para ambiente reproduzível, Appwrite para database, realtime, functions e auth.
+
+<br />
+
+## Como rodar localmente
+
+Clone o repo, copie as variáveis de ambiente e instale as dependências:
 
 ```bash
+git clone https://github.com/bythealice/planning_poker.git
+cd planning_poker
 cp .env.example .env.local
-```
-
-2) Instalar dependencias:
-
-```bash
 npm install
-```
-
-3) Rodar em desenvolvimento:
-
-```bash
 npm run dev
 ```
 
-Aplicacao local: `http://localhost:3000`
+A aplicação sobe em `http://localhost:3000`. Se preferir Docker:
 
-## 13) Qualidade e testes
+```bash
+cp .env.example .env.local
+docker compose up --build
+```
 
-### Validacoes estaticas
+<br />
+
+## Qualidade e testes
+
+Validações estáticas:
 
 ```bash
 npm run lint
@@ -267,70 +372,64 @@ npm run typecheck:cypress
 npm run build
 ```
 
-### Testes Cypress
+Testes Cypress:
 
 ```bash
-npm run cy:open
-npm run cy:run:e2e
-npm run cy:run:component
-npm run test:e2e
-npm run test:component
+npm run cy:open           # abre a interface interativa
+npm run cy:run:e2e        # roda todos os testes E2E
+npm run cy:run:component  # roda testes de componente
+npm run test:e2e          # E2E com servidor local
+npm run test:component    # componentes
+npm run test:e2e:ci       # build + start + cypress para CI
 ```
 
-Arquivos de referencia:
+Os arquivos de referência estão em `cypress/e2e/login.cy.ts`, `cypress/component/login-view.cy.tsx` e `cypress/support/commands.ts`.
 
-- `cypress/e2e/login.cy.ts`
-- `cypress/component/login-view.cy.tsx`
-- `cypress/support/commands.ts`
+<br />
 
-## 14) Estrutura do projeto
+## Estrutura do projeto
 
-```text
+```
 src/
-|- app/
-|  |- login/
-|  |- signup/
-|  |- forgot-password/
-|  \- rooms/[code]/
-|- core/
-|  |- api/
-|  |- config/
-|  |- providers/
-|  |- store/
-|  |- theme/
-|  \- utils/
-|- shared/
-|  \- ui/
-\- features/
-   |- auth/
-   |  |- components/
-   |  |- hooks/
-   |  |- services/
-   |  |- types/
-   |  |- content/
-   |  \- utils/
-   \- rooms/
-      |- components/
-      |- hooks/
-      |- types/
-      \- content/
+├── app/
+│   ├── login/
+│   ├── signup/
+│   ├── forgot-password/
+│   └── rooms/[code]/
+├── core/
+│   ├── api/
+│   ├── config/
+│   ├── providers/
+│   ├── store/
+│   ├── theme/
+│   └── utils/
+├── shared/
+│   └── ui/
+└── features/
+    ├── auth/
+    │   ├── components/
+    │   ├── hooks/
+    │   ├── services/
+    │   ├── types/
+    │   ├── content/
+    │   └── utils/
+    └── rooms/
+        ├── components/
+        ├── hooks/
+        ├── types/
+        └── content/
 ```
 
-## 15) Contribuicao
+<br />
 
-Contribuicoes sao bem-vindas, principalmente em:
+## Contribuição
 
-- evolucao do fluxo MVVM por feature;
-- experiencia de estimativa com foco em baixa friccao;
-- estrategia de integracao Jira com robustez operacional.
+Contribuições são bem-vindas, especialmente na evolução do fluxo MVVM por feature, na experiência de estimativa com foco em baixa fricção e na estratégia de integração com Jira.
 
-Padrao sugerido para novas features:
+Para novas features, o padrão é criar em `src/features/<feature-name>`, separar `components`, `hooks`, `types`, `content` e `services`, expor a entrada pelo `index.ts` da feature e cobrir com teste de componente e, quando fizer sentido, E2E.
 
-1. Criar em `src/features/<feature-name>`.
-2. Separar `components`, `hooks`, `types`, `content`, `services`.
-3. Expor entrada pelo `index.ts` da feature.
-4. Cobrir com teste de componente e, quando fizer sentido, E2E.
+<br />
 
----
-
-Se este experimento provar valor em sessoes reais, a proxima etapa e transformar esta base no padrao oficial de desenvolvimento para o time.
+<div align="center">
+  <p>Feito com frustração real e código de verdade. 🃏</p>
+</div>
