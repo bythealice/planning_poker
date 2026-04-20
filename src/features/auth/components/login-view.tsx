@@ -4,8 +4,10 @@ import { Info } from "lucide-react";
 
 import { Button, Input } from "@/shared/ui";
 
-import type { LoginCopy } from "../content/login-copy";
+import { loginCopy } from "../content/login-copy";
 import type { AuthMode } from "../types";
+
+type LoginCopy = typeof loginCopy;
 
 export type LoginViewProps = {
   copy: LoginCopy;
@@ -64,7 +66,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
           <Image
             src={copy.brand.logoSrc}
             alt={copy.brand.logoAlt}
-            width={copy.brand.logoWidth}
+            width={copy.brand.logoWidth + 100}
             height={copy.brand.logoHeight}
             priority
             className="h-auto w-auto"
@@ -198,7 +200,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
             <section aria-labelledby="login-room-title">
               <div className="h-px bg-login-card-border" />
 
-              <h2 id="login-room-title" className="sr-only">Acoes da sala</h2>
+              <h2 id="login-room-title" className="sr-only">Ações da sala</h2>
               <div className="space-y-2" data-cy="login-room-step">
                 <label htmlFor="room-code" className="text-xs font-semibold tracking-[0.16em] text-login-label">
                   {copy.fields.roomCode.label}
@@ -272,4 +274,3 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
     </article>
   );
 }
-
