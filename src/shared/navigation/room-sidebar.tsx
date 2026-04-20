@@ -52,8 +52,6 @@ export function RoomSidebar({ brand, navigation, participants, inviteTeam, logou
             width={brand.logoWidth}
             height={brand.logoHeight}
             priority
-            sizes="(min-width: 1536px) 272px, (min-width: 1280px) 256px, (min-width: 1024px) 240px, (min-width: 640px) 224px, 192px"
-            className="h-auto w-48 sm:w-52 lg:w-56 xl:w-60 2xl:w-64"
           />
         </Link>
 
@@ -62,22 +60,22 @@ export function RoomSidebar({ brand, navigation, participants, inviteTeam, logou
             const Icon = item.icon;
 
             return (
-            <button
-              key={item.label}
-              type="button"
-              className={
-                item.active
-                  ? "flex w-full items-center justify-between rounded-xl border border-login-accent/40 bg-login-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-login-accent lg:px-3.5 lg:py-2.5"
-                  : "flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-login-footer transition-colors hover:bg-white/5 hover:text-login-card-foreground lg:px-3.5 lg:py-2.5"
-              }
-              aria-current={item.active ? "page" : undefined}
-            >
-              <span className="flex items-center gap-2">
-                <Icon className="size-4" aria-hidden />
-                {item.label}
-              </span>
-              {item.active && <CheckCircle2 className="size-4" aria-hidden />}
-            </button>
+              <button
+                key={item.label}
+                type="button"
+                className={
+                  item.active
+                    ? "flex w-full items-center justify-between rounded-xl border border-login-accent/40 bg-login-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-login-accent lg:px-3.5 lg:py-2.5"
+                    : "flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-login-footer transition-colors hover:bg-white/5 hover:text-login-card-foreground lg:px-3.5 lg:py-2.5"
+                }
+                aria-current={item.active ? "page" : undefined}
+              >
+                <span className="flex items-center gap-2">
+                  <Icon className="size-4" aria-hidden />
+                  {item.label}
+                </span>
+                {item.active && <CheckCircle2 className="size-4" aria-hidden />}
+              </button>
             );
           })}
         </nav>
@@ -121,4 +119,3 @@ export function RoomSidebar({ brand, navigation, participants, inviteTeam, logou
     </aside>
   );
 }
-

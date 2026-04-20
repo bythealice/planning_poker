@@ -66,7 +66,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
           <Image
             src={copy.brand.logoSrc}
             alt={copy.brand.logoAlt}
-            width={copy.brand.logoWidth}
+            width={copy.brand.logoWidth + 100}
             height={copy.brand.logoHeight}
             priority
             className="h-auto w-auto"
