@@ -8,6 +8,17 @@ import { signupCopy } from "@/features/auth/content/signup-copy";
 import { type SignupFormData, signupSchema } from "@/features/auth/types";
 
 const signupDelayInMs = 700;
+const signupDefaultValues: SignupFormData = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+const signupSetValueOptions = {
+  shouldDirty: true,
+  shouldTouch: true,
+  shouldValidate: true,
+} as const;
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,30 +29,37 @@ export function useSignupModel() {
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
+    defaultValues: signupDefaultValues,
     mode: "onChange",
   });
 
-  const name = useWatch({ control: form.control, name: "name", defaultValue: "" });
-  const email = useWatch({ control: form.control, name: "email", defaultValue: "" });
-  const password = useWatch({ control: form.control, name: "password", defaultValue: "" });
-  const confirmPassword = useWatch({ control: form.control, name: "confirmPassword", defaultValue: "" });
+  const name = useWatch({
+    control: form.control,
+    name: "name",
+    defaultValue: signupDefaultValues.name,
+  });
+  const email = useWatch({
+    control: form.control,
+    name: "email",
+    defaultValue: signupDefaultValues.email,
+  });
+  const password = useWatch({
+    control: form.control,
+    name: "password",
+    defaultValue: signupDefaultValues.password,
+  });
+  const confirmPassword = useWatch({
+    control: form.control,
+    name: "confirmPassword",
+    defaultValue: signupDefaultValues.confirmPassword,
+  });
 
   const isLoading = form.formState.isSubmitting;
 
   const setField = useCallback(
     (field: keyof SignupFormData, value: string) => {
       setSuccess(null);
-      form.setValue(field, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
+      form.setValue(field, value, signupSetValueOptions);
     },
     [form],
   );

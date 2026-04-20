@@ -12,6 +12,7 @@ import { roomCode as roomCodeUtils } from "@/features/auth/utils/room-code";
 
 const mockDelayInMs = 700;
 const profileStorageKey = "planning-poker:login-profile";
+const defaultPersistedProfile = { authMode: "visitor", name: "" } as const;
 
 type PersistedProfile = {
   authMode: AuthMode;
@@ -20,13 +21,13 @@ type PersistedProfile = {
 
 function readPersistedProfile(): PersistedProfile {
   if (typeof window === "undefined") {
-    return { authMode: "visitor", name: "" };
+    return defaultPersistedProfile;
   }
 
   const rawProfile = window.localStorage.getItem(profileStorageKey);
 
   if (!rawProfile) {
-    return { authMode: "visitor", name: "" };
+    return defaultPersistedProfile;
   }
 
   try {
@@ -45,7 +46,7 @@ function readPersistedProfile(): PersistedProfile {
       name: typeof parsed.name === "string" ? parsed.name : "",
     };
   } catch {
-    return { authMode: "visitor", name: "" };
+    return defaultPersistedProfile;
   }
 }
 
@@ -55,6 +56,31 @@ function wait(ms: number) {
 
 export function useLoginModel() {
   const persistedProfile = useMemo(() => readPersistedProfile(), []);
+  const defaultValues: LoginFormData = useMemo(
+    () => ({
+      authMode: persistedProfile.authMode,
+      name: persistedProfile.name,
+      email: "",
+      password: "",
+      roomCode: "",
+      isObserver: false,
+    }),
+    [persistedProfile.authMode, persistedProfile.name],
+  );
+  const setValueOptions = useMemo(
+    () => ({
+      withValidation: {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      },
+      withoutValidation: {
+        shouldDirty: true,
+        shouldTouch: true,
+      },
+    }),
+    [],
+  );
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -62,53 +88,66 @@ export function useLoginModel() {
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      authMode: persistedProfile.authMode,
-      name: persistedProfile.name,
-      email: "",
-      password: "",
-      roomCode: "",
-      isObserver: false,
-    },
+    defaultValues,
     mode: "onChange",
   });
+
+  const updateField = useCallback(
+    (
+      name: keyof LoginFormData,
+      value: string | boolean,
+      shouldValidate: boolean,
+    ) => {
+      form.setValue(
+        name as never,
+        value as never,
+        shouldValidate ? setValueOptions.withValidation : setValueOptions.withoutValidation,
+      );
+    },
+    [form, setValueOptions.withValidation, setValueOptions.withoutValidation],
+  );
+
+  const clearFeedback = useCallback(() => {
+    setError(null);
+    setSuccess(null);
+  }, []);
 
   const authMode = useWatch({
     control: form.control,
     name: "authMode",
-    defaultValue: persistedProfile.authMode,
+    defaultValue: defaultValues.authMode,
   });
   const name = useWatch({
     control: form.control,
     name: "name",
-    defaultValue: persistedProfile.name,
+    defaultValue: defaultValues.name,
   });
   const email = useWatch({
     control: form.control,
     name: "email",
-    defaultValue: "",
+    defaultValue: defaultValues.email,
   });
   const password = useWatch({
     control: form.control,
     name: "password",
-    defaultValue: "",
+    defaultValue: defaultValues.password,
   });
   const roomCode = useWatch({
     control: form.control,
     name: "roomCode",
-    defaultValue: "",
+    defaultValue: defaultValues.roomCode,
   });
   const isObserver = useWatch({
     control: form.control,
     name: "isObserver",
-    defaultValue: false,
+    defaultValue: defaultValues.isObserver,
   });
 
   const isLoading = form.formState.isSubmitting || isAuthenticating;
   const isSigninMode = authMode === "signin";
   const normalizedEmail = email.trim().toLowerCase();
-  const isAccountVerified = !isSigninMode || isAuthenticated;
   const isRoomStepVisible = !isSigninMode || isAuthenticated;
+  const isAccountVerified = isRoomStepVisible;
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -132,78 +171,53 @@ export function useLoginModel() {
 
   const setAuthMode = useCallback(
     (value: AuthMode) => {
-      setError(null);
-      setSuccess(null);
+      clearFeedback();
       setIsAuthenticated(false);
 
-      form.setValue("authMode", value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
+      updateField("authMode", value, true);
     },
-    [form],
+    [clearFeedback, updateField],
   );
 
   const setName = useCallback(
     (value: string) => {
-      form.setValue("name", value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
+      updateField("name", value, true);
     },
-    [form],
+    [updateField],
   );
 
   const setEmail = useCallback(
     (value: string) => {
-      form.setValue("email", value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
+      updateField("email", value, true);
       setIsAuthenticated(false);
     },
-    [form],
+    [updateField],
   );
 
   const setPassword = useCallback(
     (value: string) => {
-      form.setValue("password", value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
+      updateField("password", value, true);
       setIsAuthenticated(false);
     },
-    [form],
+    [updateField],
   );
 
   const setRoomCode = useCallback(
     (value: string) => {
-      form.setValue("roomCode", roomCodeUtils.normalize(value), {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
+      updateField("roomCode", roomCodeUtils.normalize(value), true);
     },
-    [form],
+    [updateField],
   );
 
   const setIsObserver = useCallback(
     (value: boolean) => {
-      form.setValue("isObserver", value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      });
+      updateField("isObserver", value, false);
     },
-    [form],
+    [updateField],
   );
 
   const handleSignIn = useCallback(async () => {
-    setError(null);
-    setSuccess(null);
+    clearFeedback();
 
     const signinFieldsAreValid = await form.trigger(["email", "password"]);
     const currentEmail = form.getValues("email").trim().toLowerCase();
@@ -242,11 +256,10 @@ export function useLoginModel() {
     } finally {
       setIsAuthenticating(false);
     }
-  }, [form]);
+  }, [clearFeedback, form]);
 
   const handleCreateRoom = form.handleSubmit(async () => {
-    setError(null);
-    setSuccess(null);
+    clearFeedback();
 
     if (!isAccountVerified) {
       setError(loginCopy.validation.accountVerificationRequired);
@@ -256,18 +269,13 @@ export function useLoginModel() {
     await wait(mockDelayInMs);
     const generatedCode = roomCodeUtils.createDemoCode();
 
-    form.setValue("roomCode", generatedCode, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    });
+    updateField("roomCode", generatedCode, true);
 
     setSuccess(loginCopy.messages.created(generatedCode));
   });
 
   const handleJoinWithCode = form.handleSubmit(async ({ roomCode: currentRoomCode, isObserver: observerMode }) => {
-    setError(null);
-    setSuccess(null);
+    clearFeedback();
 
     if (!isAccountVerified) {
       setError(loginCopy.validation.accountVerificationRequired);
