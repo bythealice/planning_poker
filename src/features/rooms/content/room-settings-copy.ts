@@ -41,7 +41,7 @@ export const roomSettingsCopy = {
         values: ["1", "2", "3", "5", "8", "13", "21", "34", "55", "89", "?"],
       },
       tshirt: {
-        title: "Tamanho de camiseta",
+        title: "Tshirt",
         description: "Escala simples para alinhamento rápido de complexidade.",
         values: ["PP", "P", "M", "G", "GG"],
       },
