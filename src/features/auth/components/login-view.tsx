@@ -217,7 +217,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 {form.roomCodeError && <p id="login-room-code-error" className="text-sm text-destructive" role="alert">{form.roomCodeError}</p>}
               </div>
 
-              <label htmlFor="observer-mode" className="flex cursor-pointer items-center justify-between py-1 text-login-card-foreground">
+              <label htmlFor="observer-mode" className="mt-3 flex cursor-pointer items-center justify-between py-1 text-login-card-foreground">
                 <span>{copy.fields.observer.label}</span>
                 <span className="relative inline-flex items-center">
                   <input
