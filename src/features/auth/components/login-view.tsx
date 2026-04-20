@@ -169,7 +169,7 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               {form.passwordError && <p id="login-password-error" className="text-sm text-destructive" role="alert">{form.passwordError}</p>}
               <div className="flex justify-end">
                 <Link
-                  href="#"
+                  href="/forgot-password"
                   data-cy="login-forgot-password-link"
                   className="text-xs text-login-footer underline-offset-4 hover:text-login-card-foreground hover:underline"
                 >

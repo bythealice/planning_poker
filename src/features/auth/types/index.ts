@@ -1,5 +1,7 @@
 export { loginSchema } from "./login-schema";
 export type { LoginFormData } from "./login-schema";
+export { forgotPasswordSchema } from "./forgot-password-schema";
+export type { ForgotPasswordFormData } from "./forgot-password-schema";
 export { signupSchema } from "./signup-schema";
 export type { SignupFormData } from "./signup-schema";
 

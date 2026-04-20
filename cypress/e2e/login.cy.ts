@@ -67,5 +67,16 @@ describe("Login flow", () => {
     getByCy("signup-page").should("be.visible");
     getByCy("signup-title").should("contain.text", "Criar conta");
   });
+
+  it("navigates to forgot-password screen", () => {
+    visitLogin();
+
+    getByCy("login-mode-account").click();
+    getByCy("login-forgot-password-link").click();
+
+    cy.url().should("include", "/forgot-password");
+    getByCy("forgot-password-page").should("be.visible");
+    getByCy("forgot-password-title").should("contain.text", "Recuperar senha");
+  });
 });
 
