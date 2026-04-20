@@ -44,9 +44,9 @@ export const loginCopy = {
 	loading: "Processando...",
   },
   footer: {
-	prefix: "Powered by Appwrite",
+	prefix: "Development by Alice Ramalho",
 	separator: "•",
-	linkLabel: "Privacy",
+	linkLabel: "© 2026 Planning Poker. All rights reserved",
   },
   messages: {
 	created: (roomCode: string) => `Sala mockada criada com sucesso. Codigo: ${roomCode}`,

@@ -60,7 +60,7 @@ describe("LoginView", () => {
     getByCy("login-join-room").click();
     cy.get("@onJoinWithCode").should("have.been.calledOnce");
 
-    cy.contains("Powered by Appwrite").should("be.visible");
+    cy.contains("Development by Alice Ramalho").should("be.visible");
   });
 });
 
