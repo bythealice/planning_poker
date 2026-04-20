@@ -7,10 +7,13 @@ import { getByCy } from "../support/commands";
 describe("LoginView", () => {
   it("renders the login card and triggers actions", () => {
     const actions = {
+      onAuthModeChange: cy.stub().as("onAuthModeChange"),
       onNameChange: cy.stub().as("onNameChange"),
       onEmailChange: cy.stub().as("onEmailChange"),
+      onPasswordChange: cy.stub().as("onPasswordChange"),
       onRoomCodeChange: cy.stub().as("onRoomCodeChange"),
       onObserverChange: cy.stub().as("onObserverChange"),
+      onSignIn: cy.stub().as("onSignIn"),
       onCreateRoom: cy.stub().as("onCreateRoom"),
       onJoinWithCode: cy.stub().as("onJoinWithCode"),
     };
@@ -19,15 +22,20 @@ describe("LoginView", () => {
       <LoginView
         copy={loginCopy}
         form={{
-          name: "Alice",
+          authMode: "signin",
+          name: "",
           email: "alice@example.com",
+          password: "secret123",
           roomCode: "ABCD1",
           isObserver: true,
+          isRoomStepVisible: true,
+          isAccountVerified: true,
         }}
         status={{
           error: null,
           success: null,
           isLoading: false,
+          canSignIn: true,
           canCreateRoom: true,
           canJoinWithCode: true,
         }}
@@ -37,8 +45,12 @@ describe("LoginView", () => {
 
     getByCy("login-card").should("be.visible");
     getByCy("login-brand").find("img").should("have.attr", "alt", "Planning Poker");
-    getByCy("login-name").should("have.value", "Alice");
-    getByCy("login-email").should("have.value", "alice@example.com");
+    getByCy("login-auth-mode-switch").should("not.exist");
+    getByCy("login-signin-step-1").should("not.exist");
+    getByCy("login-email").should("not.exist");
+    getByCy("login-password").should("not.exist");
+    getByCy("login-create-account-link").should("not.exist");
+    getByCy("login-room-step").should("be.visible");
     getByCy("login-room-code").should("have.value", "ABCD1");
     getByCy("login-observer-mode").should("be.checked");
 

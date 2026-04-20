@@ -1,13 +1,17 @@
 export { loginSchema } from "./login-schema";
 export type { LoginFormData } from "./login-schema";
+export { signupSchema } from "./signup-schema";
+export type { SignupFormData } from "./signup-schema";
 
-export type AuthSession = {
-  token: string;
+export type AuthMode = "visitor" | "signin";
+
+export type SignInSession = {
   email: string;
+  token: string;
 };
 
 export interface AuthRepository {
-  login(email: string): Promise<AuthSession>;
+  signIn(email: string, password: string): Promise<SignInSession>;
 }
 
 

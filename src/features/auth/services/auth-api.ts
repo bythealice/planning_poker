@@ -1,7 +1,7 @@
 import { apiClient } from "@/core/api";
 
 import { normalizeEmail } from "@/features/auth/utils/normalize-email";
-import type { AuthRepository, AuthSession } from "@/features/auth/types";
+import type { AuthRepository, SignInSession } from "@/features/auth/types";
 
 function toDemoToken(email: string) {
   if (typeof window === "undefined") {
@@ -11,15 +11,16 @@ function toDemoToken(email: string) {
   return window.btoa(email);
 }
 
-async function loginWithApi(email: string): Promise<AuthSession> {
-  const { data } = await apiClient.post<AuthSession>("/auth/login", {
+async function signInWithApi(email: string, password: string): Promise<SignInSession> {
+  const { data } = await apiClient.post<SignInSession>("/auth/login", {
     email,
+    password,
   });
 
   return data;
 }
 
-async function loginWithDemoFallback(email: string): Promise<AuthSession> {
+async function signInWithDemoFallback(email: string): Promise<SignInSession> {
   await new Promise((resolve) => setTimeout(resolve, 600));
 
   return {
@@ -29,13 +30,13 @@ async function loginWithDemoFallback(email: string): Promise<AuthSession> {
 }
 
 export const authService: AuthRepository = {
-  async login(email: string): Promise<AuthSession> {
+  async signIn(email: string, password: string): Promise<SignInSession> {
     const normalizedEmail = normalizeEmail(email);
 
     try {
-      return await loginWithApi(normalizedEmail);
+      return await signInWithApi(normalizedEmail, password);
     } catch {
-      return loginWithDemoFallback(normalizedEmail);
+      return signInWithDemoFallback(normalizedEmail);
     }
   },
 };

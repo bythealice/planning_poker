@@ -54,6 +54,14 @@ O modulo `auth` foi dividido em tres camadas para facilitar reuso em outros proj
 - `utils/room-code.ts`: helpers puros reutilizaveis.
 
 A ideia e que a View seja portavel para outro design system, enquanto a Model permanece reutilizavel como contrato de comportamento.
+
+### Fluxo de autenticacao atual (MVP)
+
+- `Visitante` (`visitor`): entra com nome + codigo da sala, sem e-mail.
+- `Entrar` (`signin`): exige e-mail + senha e libera a etapa 2 (criar sala ou entrar com codigo) somente apos autenticar.
+- No modo `Entrar`, existe acao `Criar conta` que leva para `/signup` com formulario (nome, e-mail, senha e confirmacao de senha).
+- Sem backend ainda, a verificacao de conta e simulada localmente para preparar a integracao futura com Appwrite Auth.
+- O nome do usuario e persistido localmente para melhorar a experiencia no retorno ao app.
 ```
 
 ## Rodando local
