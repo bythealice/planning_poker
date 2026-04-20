@@ -80,6 +80,7 @@ export const roomSettingsCopy = {
   buttons: {
     inviteTeam: "Convidar equipe",
     copyRoomCode: "Copiar código",
+    logout: "Sair da conta",
     saveAsDefault: "Salvar como padrão",
     applySettings: "Aplicar configurações",
     loading: "Aplicando...",

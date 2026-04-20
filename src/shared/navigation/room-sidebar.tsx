@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, Share2, Users } from "lucide-react";
+import { BarChart3, CheckCircle2, History, LogOut, Settings2, Share2, Users, Vote } from "lucide-react";
 
 import { Button } from "@/shared/ui";
 
@@ -27,12 +27,24 @@ export type RoomSidebarProps = {
     onClick: () => void;
     disabled?: boolean;
   };
+  logout: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
 };
 
-export function RoomSidebar({ brand, navigation, participants, inviteTeam }: RoomSidebarProps) {
+export function RoomSidebar({ brand, navigation, participants, inviteTeam, logout }: RoomSidebarProps) {
+  const navigationItems = [
+    { label: navigation.voting, icon: Vote, active: false },
+    { label: navigation.history, icon: History, active: false },
+    { label: navigation.insights, icon: BarChart3, active: false },
+    { label: navigation.settings, icon: Settings2, active: true },
+  ] as const;
+
   return (
-    <aside className="flex flex-col border-b border-login-card-border bg-[#111213] px-5 py-6 lg:min-h-dvh lg:border-b-0 lg:border-r">
-      <header className="space-y-6">
+    <aside className="flex min-h-dvh flex-col overflow-hidden border-b border-login-card-border bg-[#111213] px-3 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6 lg:sticky lg:top-0 lg:h-dvh lg:w-full lg:border-b-0 lg:border-r lg:px-4 lg:py-5 xl:px-5 xl:py-6">
+      <header className="space-y-4 sm:space-y-5">
         <Link href="/login" className="inline-flex items-center justify-start" aria-label="Voltar para a tela de login">
           <Image
             src={brand.logoSrc}
@@ -40,50 +52,70 @@ export function RoomSidebar({ brand, navigation, participants, inviteTeam }: Roo
             width={brand.logoWidth}
             height={brand.logoHeight}
             priority
-            className="h-auto w-auto"
+            sizes="(min-width: 1536px) 272px, (min-width: 1280px) 256px, (min-width: 1024px) 240px, (min-width: 640px) 224px, 192px"
+            className="h-auto w-48 sm:w-52 lg:w-56 xl:w-60 2xl:w-64"
           />
         </Link>
 
         <nav aria-label="Navegação principal" className="space-y-2">
-          {[navigation.voting, navigation.history, navigation.insights, navigation.settings].map((item, index) => (
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+
+            return (
             <button
-              key={item}
+              key={item.label}
               type="button"
               className={
-                index === 3
-                  ? "flex w-full items-center justify-between rounded-xl border border-login-accent/40 bg-login-accent/10 px-4 py-3 text-left text-sm font-semibold text-login-accent"
-                  : "flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-semibold text-login-footer transition-colors hover:bg-white/5 hover:text-login-card-foreground"
+                item.active
+                  ? "flex w-full items-center justify-between rounded-xl border border-login-accent/40 bg-login-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-login-accent lg:px-3.5 lg:py-2.5"
+                  : "flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-login-footer transition-colors hover:bg-white/5 hover:text-login-card-foreground lg:px-3.5 lg:py-2.5"
               }
-              aria-current={index === 3 ? "page" : undefined}
+              aria-current={item.active ? "page" : undefined}
             >
-              <span>{item}</span>
-              {index === 3 && <CheckCircle2 className="size-4" aria-hidden />}
+              <span className="flex items-center gap-2">
+                <Icon className="size-4" aria-hidden />
+                {item.label}
+              </span>
+              {item.active && <CheckCircle2 className="size-4" aria-hidden />}
             </button>
-          ))}
+            );
+          })}
         </nav>
       </header>
 
-      <section className="mt-10 rounded-3xl border border-login-card-border bg-login-card p-5" aria-labelledby="room-participants-title">
-        <div className="mb-5 flex items-center gap-3 text-login-footer">
-          <Users className="size-5 text-login-accent" aria-hidden />
-          <h2 id="room-participants-title" className="text-sm font-semibold uppercase tracking-[0.18em]">
+      <section className="mt-5 rounded-3xl border border-login-card-border bg-login-card p-4 sm:mt-6 sm:p-4 md:p-5">
+        <div className="mb-4 flex items-center gap-3 text-login-footer">
+          <Users className="size-4 text-login-accent" aria-hidden />
+          <h2 id="room-participants-title" className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] sm:text-xs">
             {participants.label}
           </h2>
         </div>
-        <p className="text-3xl font-semibold tracking-tight text-login-card-foreground">{participants.activeCount}</p>
-        <p className="mt-2 text-sm text-login-footer">{participants.helper}</p>
+        <p className="text-2xl font-semibold tracking-tight text-login-card-foreground sm:text-[1.75rem]">{participants.activeCount}</p>
+        <p className="mt-2 text-sm leading-6 text-login-footer">{participants.helper}</p>
       </section>
 
-      <div className="mt-auto pt-6">
+      <div className="mt-auto space-y-3 pt-5 sm:pt-6">
         <Button
           type="button"
           data-cy="room-invite-team"
           onClick={inviteTeam.onClick}
           disabled={inviteTeam.disabled}
-          className="h-14 w-full rounded-2xl bg-login-card text-base font-semibold text-login-card-foreground hover:bg-login-helper"
+          className="h-12 w-full rounded-2xl border border-login-accent/40 bg-login-accent px-3 text-sm font-semibold text-login-accent-foreground shadow-lg shadow-login-accent/20 transition-all hover:bg-login-accent/90 hover:shadow-login-accent/30 sm:h-13 sm:px-4 sm:text-base"
         >
           <Share2 className="mr-2 size-4" aria-hidden />
           {inviteTeam.label}
+        </Button>
+
+        <Button
+          type="button"
+          data-cy="room-logout"
+          onClick={logout.onClick}
+          disabled={logout.disabled}
+          variant="ghost"
+          className="h-11 w-full rounded-2xl border border-[#6f2b2b] bg-transparent px-3 text-sm font-semibold text-[#b85a5a] transition-colors hover:bg-[#6f2b2b]/10 hover:text-[#d06e6e]"
+        >
+          <LogOut className="mr-2 size-4" aria-hidden />
+          {logout.label}
         </Button>
       </div>
     </aside>

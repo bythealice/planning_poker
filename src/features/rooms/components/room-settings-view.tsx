@@ -2,12 +2,11 @@ import {
   CheckCircle2,
   Clock3,
   Copy,
-  Sparkles,
   X,
 } from "lucide-react";
 
 import { Button, Input, Label } from "@/shared/ui";
-import { RoomSidebar } from "@/shared/navigation";
+import { RoomPageHeader, RoomSidebar } from "@/shared/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Slider } from "@/shared/ui/slider";
 import { Switch } from "@/shared/ui/switch";
@@ -48,6 +47,7 @@ export type RoomSettingsViewProps = {
     onRoundTimerSecondsChange: (value: number) => void;
     onCopyRoomCode: () => void;
     onInviteTeam: () => void;
+    onLogout: () => void;
     onSaveAsDefault: () => void;
     onApplySettings: () => void;
     onDismissSuccess: () => void;
@@ -91,7 +91,7 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
         </div>
       )}
 
-      <div className="mx-auto grid min-h-dvh max-w-430 lg:grid-cols-[286px_minmax(0,1fr)]">
+      <div className="grid min-h-dvh w-full grid-cols-1 lg:grid-cols-[minmax(220px,250px)_minmax(0,1fr)] xl:grid-cols-[minmax(230px,260px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(240px,280px)_minmax(0,1fr)]">
         <RoomSidebar
           brand={copy.brand}
           navigation={copy.navigation}
@@ -105,44 +105,31 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
             onClick: actions.onInviteTeam,
             disabled: !status.canInviteTeam,
           }}
+          logout={{
+            label: copy.buttons.logout,
+            onClick: actions.onLogout,
+          }}
         />
 
-        <div className="flex flex-col px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
-          <header className="mx-auto mb-8 flex w-full max-w-5xl flex-col gap-4">
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              <div className="flex items-center gap-3">
-                <div className="rounded-full border border-login-card-border bg-login-card px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-login-card-foreground">
-                  {copy.brand.logoAlt.replace("Logo do ", "")}
-                </div>
-                <div className="rounded-full border border-login-accent/40 bg-login-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-login-accent">
-                  Moderador
-                </div>
-              </div>
-            </div>
-
-            <div className="max-w-3xl space-y-3">
-              <p className="inline-flex items-center gap-2 rounded-full border border-login-accent/30 bg-login-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-login-accent">
-                <Sparkles className="size-4" aria-hidden />
-                {copy.header.badge}
-              </p>
-              <h1 id="room-settings-title" className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                {copy.header.title}
-              </h1>
-              <p className="max-w-2xl text-base text-login-footer sm:text-lg">
-                {copy.header.description}
-              </p>
-            </div>
-          </header>
+        <div className="flex min-w-0 flex-col px-3 py-3 sm:px-5 sm:py-4 md:px-6 md:py-5 lg:px-8 lg:py-6 xl:px-10 xl:py-7 2xl:px-12 2xl:py-8">
+          <RoomPageHeader
+            titleId="room-settings-title"
+            brandLabel={copy.brand.logoAlt.replace("Logo do ", "")}
+            moderatorLabel="Moderador"
+            badge={copy.header.badge}
+            title={copy.header.title}
+            description={copy.header.description}
+          />
 
           <form
-            className="mx-auto flex w-full max-w-5xl flex-col gap-6"
+            className="flex w-full flex-col gap-5 md:gap-6 lg:gap-7"
             onSubmit={(event) => {
               event.preventDefault();
               actions.onApplySettings();
             }}
             aria-describedby="room-settings-feedback"
           >
-            <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <section className="grid gap-5 md:gap-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
               <div className="space-y-6">
                 <Card aria-labelledby="room-name-title">
                   <CardHeader className="space-y-1">
@@ -196,7 +183,7 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                   </CardContent>
                 </Card>
 
-                <section className="rounded-3xl border border-login-card-border bg-login-card p-6 shadow-2xl shadow-black/20" aria-labelledby="estimation-system-title">
+                <section className="rounded-3xl border border-login-card-border bg-login-card p-5 md:p-6 shadow-2xl shadow-black/20" aria-labelledby="estimation-system-title">
                   <div className="space-y-2">
                     <h2 id="estimation-system-title" className="text-sm font-semibold uppercase tracking-[0.18em] text-login-card-foreground">
                       {copy.fields.estimationSystem.label}
@@ -204,9 +191,9 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                     <p className="text-sm text-login-card-foreground/75">Escolha a escala que melhor combina com o seu time.</p>
                   </div>
 
-                  <fieldset className="mt-5">
-                    <legend className="sr-only">{copy.fields.estimationSystem.label}</legend>
-                    <ul className="grid gap-3 md:grid-cols-3">
+                   <fieldset className="mt-5">
+                     <legend className="sr-only">{copy.fields.estimationSystem.label}</legend>
+                     <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
                       {[
                         {
                           value: "fibonacci" as const,
@@ -309,7 +296,7 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                   </CardContent>
                 </Card>
 
-                <section className="rounded-3xl border border-login-card-border bg-login-card p-6 shadow-2xl shadow-black/20" aria-labelledby="reveal-cards-title">
+                <section className="rounded-3xl border border-login-card-border bg-login-card p-5 md:p-6 shadow-2xl shadow-black/20" aria-labelledby="reveal-cards-title">
                   <div className="space-y-2">
                     <h2 id="reveal-cards-title" className="text-sm font-semibold uppercase tracking-[0.18em] text-login-card-foreground">
                       {copy.fields.revealCards.title}
@@ -406,7 +393,7 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
               </div>
             </section>
 
-            <section className="grid gap-4 rounded-3xl border border-login-card-border bg-login-card p-6 shadow-2xl shadow-black/20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" aria-labelledby="room-summary-title">
+            <section className="grid gap-4 rounded-3xl border border-login-card-border bg-login-card p-5 md:p-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 shadow-2xl shadow-black/20" aria-labelledby="room-summary-title">
               <div className="space-y-2">
                 <h2 id="room-summary-title" className="text-sm font-semibold uppercase tracking-[0.18em] text-login-card-foreground">
                   Resumo da sala
@@ -455,7 +442,7 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
               )}
             </div>
 
-            <footer className="flex flex-col gap-3 border-t border-login-card-border pt-6 sm:flex-row sm:items-center sm:justify-end">
+            <footer className="flex flex-col gap-3 border-t border-login-card-border pt-5 md:pt-6 sm:flex-row sm:items-center sm:justify-end md:gap-4">
               {form.isAuthenticated && (
                 <Button
                   type="button"

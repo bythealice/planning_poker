@@ -2,7 +2,7 @@
 
 import { roomSettingsCopy } from "./content/room-settings-copy";
 import { RoomSettingsView } from "./components/room-settings-view";
-import { useRoomSettingsModel } from "./hooks/use-room-settings-model";
+import { useRoomSettingsModel, type RoomSettingsModel } from "./hooks/use-room-settings-model";
 
 export type RoomSettingsViewModelProps = {
   roomCode: string;
@@ -10,7 +10,7 @@ export type RoomSettingsViewModelProps = {
 };
 
 export function RoomSettingsViewModel({ roomCode, openedFromCreation }: RoomSettingsViewModelProps) {
-  const vm = useRoomSettingsModel({ roomCode, openedFromCreation });
+  const vm: RoomSettingsModel = useRoomSettingsModel({ roomCode, openedFromCreation });
 
   return (
     <RoomSettingsView
@@ -46,6 +46,7 @@ export function RoomSettingsViewModel({ roomCode, openedFromCreation }: RoomSett
         onRoundTimerSecondsChange: vm.setRoundTimerSeconds,
         onCopyRoomCode: vm.handleCopyRoomCode,
         onInviteTeam: vm.handleInviteTeam,
+        onLogout: vm.handleLogout,
         onSaveAsDefault: vm.handleSaveAsDefault,
         onApplySettings: vm.handleApplySettings,
         onDismissSuccess: vm.dismissSuccess,

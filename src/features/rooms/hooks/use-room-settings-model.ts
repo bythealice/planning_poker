@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/core/store";
 import { roomCode as roomCodeUtils } from "@/features/auth/utils/room-code";
@@ -18,6 +19,40 @@ type PersistedRoomSettings = Omit<RoomSettingsFormData, "roomCode">;
 type RoomSettingsModelOptions = {
   roomCode: string;
   openedFromCreation?: boolean;
+};
+
+export type RoomSettingsModel = {
+  roomCode: string;
+  roomInviteUrl: string;
+  roomName: string;
+  estimationSystem: RoomSettingsFormData["estimationSystem"];
+  showTitleDuringVoting: boolean;
+  showParticipantCount: boolean;
+  revealCardsBy: RoomSettingsFormData["revealCardsBy"];
+  roundTimerEnabled: boolean;
+  roundTimerSeconds: number;
+  isAuthenticated: boolean;
+  banner: string | null;
+  error: string | null;
+  success: string | null;
+  isLoading: boolean;
+  canCopyRoomCode: boolean;
+  canInviteTeam: boolean;
+  canApplySettings: boolean;
+  canSaveAsDefault: boolean;
+  setRoomName: (value: string) => void;
+  setEstimationSystem: (value: RoomSettingsFormData["estimationSystem"]) => void;
+  setShowTitleDuringVoting: (value: boolean) => void;
+  setShowParticipantCount: (value: boolean) => void;
+  setRevealCardsBy: (value: RoomSettingsFormData["revealCardsBy"]) => void;
+  setRoundTimerEnabled: (value: boolean) => void;
+  setRoundTimerSeconds: (value: number) => void;
+  handleCopyRoomCode: () => Promise<void>;
+  handleInviteTeam: () => Promise<void>;
+  handleLogout: () => void;
+  handleSaveAsDefault: () => Promise<void>;
+  handleApplySettings: () => Promise<void>;
+  dismissSuccess: () => void;
 };
 
 function wait(ms: number) {
@@ -86,10 +121,12 @@ function writePersistedSettings(settings: PersistedRoomSettings) {
   window.localStorage.setItem(roomSettingsStorageKey, JSON.stringify(settings));
 }
 
-export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: RoomSettingsModelOptions) {
+export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: RoomSettingsModelOptions): RoomSettingsModel {
+  const router = useRouter();
   const normalizedRoomCode = useMemo(() => roomCodeUtils.normalize(roomCode), [roomCode]);
-  const persistedSettings = useMemo(() => readPersistedSettings(), []);
+  const [persistedSettings, setPersistedSettings] = useState<Partial<PersistedRoomSettings> | null>(null);
   const isAuthenticated = Boolean(useAuthStore((state) => state.session));
+  const clearSession = useAuthStore((state) => state.clearSession);
   const [banner, setBanner] = useState<string | null>(openedFromCreation ? roomSettingsCopy.messages.roomOpened : null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -129,6 +166,27 @@ export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: R
     defaultValues,
     mode: "onChange",
   });
+
+  useEffect(() => {
+    setPersistedSettings(readPersistedSettings());
+  }, []);
+
+  useEffect(() => {
+    if (!persistedSettings) {
+      return;
+    }
+
+    form.reset({
+      roomCode: normalizedRoomCode,
+      roomName: persistedSettings.roomName?.trim() || deriveRoomName(normalizedRoomCode),
+      estimationSystem: persistedSettings.estimationSystem ?? "fibonacci",
+      showTitleDuringVoting: persistedSettings.showTitleDuringVoting ?? true,
+      showParticipantCount: persistedSettings.showParticipantCount ?? false,
+      revealCardsBy: persistedSettings.revealCardsBy ?? "host-only",
+      roundTimerEnabled: persistedSettings.roundTimerEnabled ?? true,
+      roundTimerSeconds: persistedSettings.roundTimerSeconds ?? 60,
+    });
+  }, [form, normalizedRoomCode, persistedSettings]);
 
 
   useEffect(() => {
@@ -282,6 +340,12 @@ export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: R
     setSuccess(roomSettingsCopy.messages.savedAsDefault);
   }, [clearFeedback, form, isAuthenticated]);
 
+  const handleLogout = useCallback(() => {
+    clearFeedback();
+    clearSession();
+    router.replace("/login");
+  }, [clearFeedback, clearSession, router]);
+
   const handleApplySettings = form.handleSubmit(async (values) => {
     clearFeedback();
     setIsSubmitting(true);
@@ -332,6 +396,7 @@ export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: R
     setRoundTimerSeconds,
     handleCopyRoomCode,
     handleInviteTeam,
+    handleLogout,
     handleSaveAsDefault,
     handleApplySettings,
     dismissSuccess,
