@@ -57,16 +57,28 @@ export type RoomSettingsViewProps = {
 const timerMarks = [15, 300] as const;
 
 function formatTimerLabel(seconds: number) {
-  if (seconds >= 60 && seconds % 60 === 0) {
-    return `${seconds / 60}m`;
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  if (minutes === 0) {
+    return `${remainingSeconds}s`;
   }
 
-  return `${seconds}s`;
+  if (remainingSeconds === 0) {
+    return `${minutes}m`;
+  }
+
+  return `${minutes}m ${remainingSeconds}s`;
 }
 
 export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsViewProps) {
   const loadingLabel = status.isLoading ? copy.buttons.loading : null;
   const showDefaultSaveHint = !form.isAuthenticated;
+  const [timerMin, timerMax] = timerMarks;
+  const timerProgress = Math.min(
+    100,
+    Math.max(0, ((form.roundTimerSeconds - timerMin) / (timerMax - timerMin)) * 100),
+  );
 
   return (
     <main className="min-h-dvh bg-login-bg text-login-card-foreground" data-cy="room-settings-page" aria-labelledby="room-settings-title">
@@ -372,15 +384,28 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    <Slider
-                      min={15}
-                      max={300}
-                      step={15}
-                      value={form.roundTimerSeconds}
-                      onValueChange={actions.onRoundTimerSecondsChange}
-                      disabled={!form.roundTimerEnabled}
-                      aria-label={copy.fields.roundTimer.title}
-                    />
+                    <div className="relative pt-8">
+                      <output
+                        id="timer-current-value"
+                        className="pointer-events-none absolute top-0 -translate-x-1/2 whitespace-nowrap rounded-md border border-login-accent/40 bg-login-card px-2.5 py-1 text-xs font-semibold text-login-accent shadow-lg shadow-black/30"
+                        style={{ left: `clamp(1rem, ${timerProgress}%, calc(100% - 1rem))` }}
+                        aria-live="polite"
+                      >
+                        {formatTimerLabel(form.roundTimerSeconds)}
+                      </output>
+
+                      <Slider
+                        min={timerMin}
+                        max={timerMax}
+                        step={15}
+                        value={form.roundTimerSeconds}
+                        onValueChange={actions.onRoundTimerSecondsChange}
+                        disabled={!form.roundTimerEnabled}
+                        aria-label={copy.fields.roundTimer.title}
+                        aria-describedby="timer-current-value"
+                        aria-valuetext={formatTimerLabel(form.roundTimerSeconds)}
+                      />
+                    </div>
                     <div className="flex items-center justify-between text-xs text-login-card-foreground/60">
                       {timerMarks.map((mark) => (
                         <span key={mark} className={mark === form.roundTimerSeconds ? "text-login-accent" : undefined}>
