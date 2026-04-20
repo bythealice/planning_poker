@@ -18,6 +18,7 @@ describe("RoomSettingsView", () => {
       onInviteTeam: cy.stub().as("onInviteTeam"),
       onSaveAsDefault: cy.stub().as("onSaveAsDefault"),
       onApplySettings: cy.stub().as("onApplySettings"),
+      onDismissSuccess: cy.stub().as("onDismissSuccess"),
     };
 
     mount(
@@ -73,6 +74,7 @@ describe("RoomSettingsView", () => {
       onInviteTeam: cy.stub(),
       onSaveAsDefault: cy.stub().as("onSaveAsDefault"),
       onApplySettings: cy.stub(),
+      onDismissSuccess: cy.stub(),
     };
 
     mount(

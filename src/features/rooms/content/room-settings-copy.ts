@@ -37,15 +37,18 @@ export const roomSettingsCopy = {
       label: "Sistema de estimativa",
       fibonacci: {
         title: "Fibonacci",
-        values: ["1", "2", "3", "…"],
+        description: "Escala progressiva para estimativas com maior incerteza.",
+        values: ["1", "2", "3", "5", "8", "13", "21", "34", "55", "89", "?"],
       },
       tshirt: {
         title: "Tamanho de camiseta",
-        values: ["PP", "P", "M", "G"],
+        description: "Escala simples para alinhamento rápido de complexidade.",
+        values: ["PP", "P", "M", "G", "GG"],
       },
       powersOf2: {
         title: "Potências de 2",
-        values: ["2", "4", "8", "…"],
+        description: "Escala objetiva para evolução de esforço em dobro.",
+        values: ["1", "2", "4", "8", "16", "32", "64"],
       },
     },
     visibility: {

@@ -135,6 +135,20 @@ export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: R
     setBanner(openedFromCreation ? roomSettingsCopy.messages.roomOpened : null);
   }, [openedFromCreation]);
 
+  useEffect(() => {
+    if (!success) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setSuccess(null);
+    }, 3200);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [success]);
+
   const updateField = useCallback(
     <K extends keyof RoomSettingsFormData>(name: K, value: RoomSettingsFormData[K], shouldValidate: boolean) => {
       form.setValue(
@@ -148,6 +162,10 @@ export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: R
 
   const clearFeedback = useCallback(() => {
     setError(null);
+    setSuccess(null);
+  }, []);
+
+  const dismissSuccess = useCallback(() => {
     setSuccess(null);
   }, []);
 
@@ -316,6 +334,7 @@ export function useRoomSettingsModel({ roomCode, openedFromCreation = false }: R
     handleInviteTeam,
     handleSaveAsDefault,
     handleApplySettings,
+    dismissSuccess,
   };
 }
 

@@ -48,6 +48,7 @@ export function RoomSettingsViewModel({ roomCode, openedFromCreation }: RoomSett
         onInviteTeam: vm.handleInviteTeam,
         onSaveAsDefault: vm.handleSaveAsDefault,
         onApplySettings: vm.handleApplySettings,
+        onDismissSuccess: vm.dismissSuccess,
       }}
     />
   );

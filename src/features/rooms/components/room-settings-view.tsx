@@ -6,6 +6,7 @@ import {
   Copy,
   Share2,
   Sparkles,
+  X,
   Users,
 } from "lucide-react";
 
@@ -52,10 +53,11 @@ export type RoomSettingsViewProps = {
     onInviteTeam: () => void;
     onSaveAsDefault: () => void;
     onApplySettings: () => void;
+    onDismissSuccess: () => void;
   };
 };
 
-const timerMarks = [15, 60, 300] as const;
+const timerMarks = [15, 300] as const;
 
 function formatTimerLabel(seconds: number) {
   if (seconds >= 60 && seconds % 60 === 0) {
@@ -71,6 +73,27 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
 
   return (
     <main className="min-h-dvh bg-login-bg text-login-card-foreground" data-cy="room-settings-page" aria-labelledby="room-settings-title">
+      {status.success && (
+        <div className="fixed right-4 top-4 z-50 w-[min(92vw,420px)]" data-cy="room-toast" role="status" aria-live="polite">
+          <div className="flex items-start gap-3 rounded-2xl border border-login-accent/40 bg-login-card px-4 py-3 shadow-2xl shadow-black/40">
+            <span className="mt-0.5 inline-flex size-6 items-center justify-center rounded-full bg-login-accent text-login-accent-foreground">
+              <CheckCircle2 className="size-4" aria-hidden />
+            </span>
+            <p className="min-w-0 flex-1 text-sm font-medium text-login-card-foreground">{status.success}</p>
+            <Button
+              type="button"
+              onClick={actions.onDismissSuccess}
+              data-cy="room-toast-close"
+              variant="ghost"
+              className="size-7 rounded-full p-0 text-login-footer hover:bg-login-helper hover:text-login-card-foreground"
+              aria-label="Fechar notificação"
+            >
+              <X className="size-4" aria-hidden />
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="mx-auto grid min-h-dvh max-w-430 lg:grid-cols-[286px_minmax(0,1fr)]">
         <aside className="flex flex-col border-b border-login-card-border bg-[#111213] px-5 py-6 lg:min-h-dvh lg:border-b-0 lg:border-r">
           <header className="space-y-6">
@@ -138,19 +161,7 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
 
         <div className="flex flex-col px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
           <header className="mx-auto mb-8 flex w-full max-w-5xl flex-col gap-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              {status.banner ? (
-                <div className="inline-flex items-center gap-3 rounded-full border border-login-card-border bg-login-card px-4 py-3 text-sm font-semibold text-login-card-foreground shadow-2xl shadow-black/20">
-                  <span className="inline-flex size-6 items-center justify-center rounded-full bg-login-accent text-login-accent-foreground">
-                    <CheckCircle2 className="size-4" aria-hidden />
-                  </span>
-                  {status.banner}
-                  <span className="text-login-footer">{form.roomCode}</span>
-                </div>
-              ) : (
-                <div />
-              )}
-
+            <div className="flex flex-wrap items-center justify-end gap-3">
               <div className="flex items-center gap-3">
                 <div className="rounded-full border border-login-card-border bg-login-card px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-login-card-foreground">
                   {copy.brand.logoAlt.replace("Logo do ", "")}
@@ -228,9 +239,8 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                       data-cy="room-copy-code"
                       onClick={actions.onCopyRoomCode}
                       disabled={!status.canCopyRoomCode}
-                      variant="outline"
                       aria-label={copy.buttons.copyRoomCode}
-                      className="h-14 rounded-2xl border border-login-card-border bg-login-field px-4 text-sm font-semibold text-login-card-foreground transition-colors hover:bg-login-helper"
+                      className="h-14 rounded-2xl border border-login-card-border bg-login-field px-4 text-base font-semibold text-login-card-foreground transition-colors hover:bg-login-helper"
                     >
                       <Copy className="size-4" aria-hidden />
                       <span className="ml-2">{copy.buttons.copyRoomCode}</span>
@@ -253,16 +263,19 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                         {
                           value: "fibonacci" as const,
                           title: copy.fields.estimationSystem.fibonacci.title,
+                          description: copy.fields.estimationSystem.fibonacci.description,
                           values: copy.fields.estimationSystem.fibonacci.values,
                         },
                         {
                           value: "tshirt" as const,
                           title: copy.fields.estimationSystem.tshirt.title,
+                          description: copy.fields.estimationSystem.tshirt.description,
                           values: copy.fields.estimationSystem.tshirt.values,
                         },
                         {
                           value: "powersOf2" as const,
                           title: copy.fields.estimationSystem.powersOf2.title,
+                          description: copy.fields.estimationSystem.powersOf2.description,
                           values: copy.fields.estimationSystem.powersOf2.values,
                         },
                       ].map((option) => {
@@ -286,19 +299,16 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                                 className="sr-only"
                               />
                               <div className="flex items-start justify-between gap-3">
-                                <span className="text-lg font-semibold">{option.title}</span>
+                                <span className="min-w-0 text-lg font-semibold leading-tight">{option.title}</span>
                                 {selected && <CheckCircle2 className="size-5 text-login-accent" aria-hidden />}
                               </div>
-                              <div className="mt-6 flex gap-2">
-                                {option.values.map((value) => (
-                                  <span
-                                    key={value}
-                                    className="inline-flex min-w-10 items-center justify-center rounded-lg bg-[#202123] px-3 py-2 font-mono text-sm text-login-card-foreground"
-                                  >
-                                    {value}
-                                  </span>
-                                ))}
-                              </div>
+                              <p className="mt-4 text-sm leading-6 text-login-card-foreground/75">
+                                {option.description}
+                              </p>
+                              <p className="mt-2 text-xs text-login-card-foreground/55">
+                                Exemplo: {option.values.slice(0, 5).join(" · ")}
+                                {option.values.length > 5 ? " ..." : ""}
+                              </p>
                             </label>
                           </li>
                         );
@@ -490,11 +500,6 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
                   {status.error}
                 </p>
               )}
-              {status.success && (
-                <p className="rounded-2xl border border-login-accent/30 bg-login-accent/10 px-4 py-3 text-sm text-login-card-foreground" role="status" aria-live="polite">
-                  {status.success}
-                </p>
-              )}
               {showDefaultSaveHint && (
                 <p className="text-sm text-login-footer">
                   {copy.messages.authRequiredForDefault}
@@ -503,26 +508,26 @@ export function RoomSettingsView({ copy, form, status, actions }: RoomSettingsVi
             </div>
 
             <footer className="flex flex-col gap-3 border-t border-login-card-border pt-6 sm:flex-row sm:items-center sm:justify-end">
-              <Button
-                type="submit"
-                data-cy="room-apply-settings"
-                disabled={!status.canApplySettings}
-                className="h-14 w-full rounded-2xl border border-login-card-border bg-login-field px-6 text-base font-semibold text-login-card-foreground transition-colors hover:bg-login-helper sm:w-auto"
-              >
-                {loadingLabel ?? copy.buttons.applySettings}
-              </Button>
-
               {form.isAuthenticated && (
                 <Button
                   type="button"
                   data-cy="room-save-default"
                   onClick={actions.onSaveAsDefault}
                   disabled={!status.canSaveAsDefault}
-                  className="h-14 w-full rounded-2xl bg-login-accent px-6 text-base font-semibold text-login-accent-foreground hover:bg-login-accent/90 sm:w-auto"
+                  className="h-14 w-full rounded-2xl border border-login-card-border bg-login-field px-6 text-base font-semibold text-login-card-foreground transition-colors hover:bg-login-helper sm:w-auto"
                 >
                   {copy.buttons.saveAsDefault}
                 </Button>
               )}
+
+              <Button
+                type="submit"
+                data-cy="room-apply-settings"
+                disabled={!status.canApplySettings}
+                className="h-14 w-full rounded-2xl bg-login-accent px-6 text-base font-semibold text-login-accent-foreground hover:bg-login-accent/90 sm:w-auto"
+              >
+                {loadingLabel ?? copy.buttons.applySettings}
+              </Button>
             </footer>
           </form>
         </div>

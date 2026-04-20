@@ -1,14 +1,19 @@
 import { RoomSettingsViewModel } from "@/features/rooms";
 
-export default function RoomSettingsPage({
+export default async function RoomSettingsPage({
   params,
   searchParams,
 }: Readonly<{
-  params: { code: string };
-  searchParams?: Record<string, string | string[] | undefined>;
+  params: Promise<{ code: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }>) {
-  const openedFromCreation = searchParams?.opened === "1" || searchParams?.created === "1";
+  const [{ code }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams ?? Promise.resolve<Record<string, string | string[] | undefined>>({}),
+  ]);
 
-  return <RoomSettingsViewModel roomCode={params.code} openedFromCreation={openedFromCreation} />;
+  const openedFromCreation = resolvedSearchParams.opened === "1" || resolvedSearchParams.created === "1";
+
+  return <RoomSettingsViewModel roomCode={code} openedFromCreation={openedFromCreation} />;
 }
 
