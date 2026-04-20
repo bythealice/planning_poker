@@ -27,6 +27,13 @@ export const signupCopy = {
   messages: {
     created: "Conta mockada criada com sucesso. Agora voce pode entrar com seu e-mail.",
   },
+  validation: {
+    name: "Digite seu nome.",
+    email: "Digite um e-mail valido.",
+    passwordMinLength: "A senha precisa ter pelo menos 8 caracteres.",
+    confirmPasswordRequired: "Confirme a senha.",
+    passwordMismatch: "As senhas nao conferem.",
+  },
 } as const;
 
 export type SignupCopy = typeof signupCopy;

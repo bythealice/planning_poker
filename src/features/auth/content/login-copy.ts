@@ -51,11 +51,11 @@ export const loginCopy = {
 	created: (roomCode: string) => `Sala mockada criada com sucesso. Codigo: ${roomCode}`,
 	joined: (roomCode: string, role: "observador" | "participante") =>
 	  `Entrada mockada realizada na sala ${roomCode} como ${role}.`,
-	signedIn: (email: string) => `Login mockado realizado com sucesso para ${email}.`,
   },
   validation: {
 	email: "Digite um e-mail valido.",
 	emailRequiredForAccount: "Digite um e-mail para continuar em Entrar.",
+	password: "Digite sua senha para entrar.",
 	passwordRequiredForAccount: "Digite sua senha para continuar em Entrar.",
 	signinSessionInvalid: "Nao foi possivel validar a sessao de login. Tente novamente.",
 	signinFailed: "Nao foi possivel entrar agora. Verifique e-mail e senha e tente novamente.",

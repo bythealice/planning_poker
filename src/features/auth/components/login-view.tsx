@@ -48,14 +48,19 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
   const loadingLabel = status.isLoading ? copy.buttons.loading : null;
   const isSigninMode = form.authMode === "signin";
   const isSigninStep2 = isSigninMode && form.isRoomStepVisible;
+  const nameErrorId = form.nameError ? "login-name-error" : undefined;
+  const emailErrorId = form.emailError ? "login-email-error" : undefined;
+  const passwordErrorId = form.passwordError ? "login-password-error" : undefined;
+  const roomCodeErrorId = form.roomCodeError ? "login-room-code-error" : undefined;
 
   return (
-    <div className="flex w-full flex-col items-center" data-cy="login-view">
+    <article className="flex w-full flex-col items-center" data-cy="login-view" aria-labelledby="login-title">
       <section
         className="w-full max-w-login-card rounded-2xl border border-login-card-border bg-login-card p-8 text-login-card-foreground shadow-2xl shadow-black/40"
         data-cy="login-card"
       >
-        <div className="mb-8 flex justify-center" data-cy="login-brand">
+        <header className="mb-8 flex justify-center" data-cy="login-brand">
+          <h1 id="login-title" className="sr-only">Acesso ao Planning Poker</h1>
           <Image
             src={copy.brand.logoSrc}
             alt={copy.brand.logoAlt}
@@ -64,12 +69,12 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
             priority
             className="h-auto w-auto"
           />
-        </div>
+        </header>
 
         <div className="space-y-5">
-          {!isSigninStep2 && <div className="space-y-2">
-            <p className="text-xs font-semibold tracking-[0.16em] text-login-label">{copy.authMode.label}</p>
-            <div className="grid grid-cols-2 gap-2" data-cy="login-auth-mode-switch">
+          {!isSigninStep2 && <fieldset className="space-y-2" aria-describedby="login-mode-hint">
+            <legend className="text-xs font-semibold tracking-[0.16em] text-login-label">{copy.authMode.label}</legend>
+            <div className="grid grid-cols-2 gap-2" data-cy="login-auth-mode-switch" role="radiogroup" aria-label={copy.authMode.label}>
               <Button
                 type="button"
                 data-cy="login-mode-ghost"
@@ -95,16 +100,16 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 {copy.authMode.signin}
               </Button>
             </div>
-            <div className="flex items-center gap-2 rounded-md bg-login-helper px-3 py-2 text-sm text-login-helper-foreground">
+            <div id="login-mode-hint" className="flex items-center gap-2 rounded-md bg-login-helper px-3 py-2 text-sm text-login-helper-foreground">
               <Info className="size-4 text-login-accent" aria-hidden />
               <span>{isSigninMode ? copy.authMode.signinHint : copy.authMode.visitorHint}</span>
             </div>
-          </div>}
+          </fieldset>}
 
           {!isSigninMode && (
-            <div className="space-y-2" data-cy="login-visitor-name-section">
+            <section className="space-y-2" data-cy="login-visitor-name-section" aria-labelledby="login-name-label">
               <label htmlFor="login-name" className="text-xs font-semibold tracking-[0.16em] text-login-label">
-                {copy.fields.name.label}
+                <span id="login-name-label">{copy.fields.name.label}</span>
               </label>
               <Input
                 id="login-name"
@@ -112,15 +117,26 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 value={form.name}
                 onChange={(event) => actions.onNameChange(event.target.value)}
                 placeholder={copy.fields.name.placeholder}
+                aria-invalid={Boolean(form.nameError)}
+                aria-describedby={["login-name-helper", nameErrorId].filter(Boolean).join(" ")}
                 className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
               />
-              {form.nameError && <p className="text-sm text-destructive" role="alert">{form.nameError}</p>}
-              <p className="text-xs text-login-footer">{copy.fields.name.helper}</p>
-            </div>
+              {form.nameError && <p id="login-name-error" className="text-sm text-destructive" role="alert">{form.nameError}</p>}
+              <p id="login-name-helper" className="text-xs text-login-footer">{copy.fields.name.helper}</p>
+            </section>
           )}
 
           {isSigninMode && !isSigninStep2 && (
-            <div className="space-y-2" data-cy="login-signin-step-1">
+            <form
+              className="space-y-2"
+              data-cy="login-signin-step-1"
+              aria-labelledby="login-signin-title"
+              onSubmit={(event) => {
+                event.preventDefault();
+                actions.onSignIn();
+              }}
+            >
+              <h2 id="login-signin-title" className="sr-only">Entrar com e-mail e senha</h2>
               <label htmlFor="login-email" className="text-xs font-semibold tracking-[0.16em] text-login-label">
                 {copy.fields.email.label}
               </label>
@@ -131,10 +147,12 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 value={form.email}
                 onChange={(event) => actions.onEmailChange(event.target.value)}
                 placeholder={copy.fields.email.placeholder}
+                aria-invalid={Boolean(form.emailError)}
+                aria-describedby={["login-email-helper", emailErrorId].filter(Boolean).join(" ")}
                 className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
               />
-              {form.emailError && <p className="text-sm text-destructive" role="alert">{form.emailError}</p>}
-              <div className="flex items-center gap-2 rounded-md bg-login-helper px-3 py-2 text-sm text-login-helper-foreground">
+              {form.emailError && <p id="login-email-error" className="text-sm text-destructive" role="alert">{form.emailError}</p>}
+              <div id="login-email-helper" className="flex items-center gap-2 rounded-md bg-login-helper px-3 py-2 text-sm text-login-helper-foreground">
                 <Info className="size-4 text-login-accent" aria-hidden />
                 <span>{copy.fields.email.helper}</span>
               </div>
@@ -148,13 +166,14 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 value={form.password}
                 onChange={(event) => actions.onPasswordChange(event.target.value)}
                 placeholder={copy.fields.password.placeholder}
+                aria-invalid={Boolean(form.passwordError)}
+                aria-describedby={passwordErrorId}
                 className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
               />
-              {form.passwordError && <p className="text-sm text-destructive" role="alert">{form.passwordError}</p>}
+              {form.passwordError && <p id="login-password-error" className="text-sm text-destructive" role="alert">{form.passwordError}</p>}
               <Button
-                type="button"
+                type="submit"
                 data-cy="login-signin"
-                onClick={actions.onSignIn}
                 disabled={!status.canSignIn}
                 className="h-11 w-full rounded-lg border border-login-card-border bg-login-field text-login-card-foreground hover:bg-login-helper"
               >
@@ -167,13 +186,14 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               >
                 {copy.buttons.createAccount}
               </Link>
-            </div>
+            </form>
           )}
 
           {form.isRoomStepVisible && (
-            <>
+            <section aria-labelledby="login-room-title">
               <div className="h-px bg-login-card-border" />
 
+              <h2 id="login-room-title" className="sr-only">Acoes da sala</h2>
               <div className="space-y-2" data-cy="login-room-step">
                 <label htmlFor="room-code" className="text-xs font-semibold tracking-[0.16em] text-login-label">
                   {copy.fields.roomCode.label}
@@ -185,9 +205,11 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                   onChange={(event) => actions.onRoomCodeChange(event.target.value)}
                   placeholder={copy.fields.roomCode.placeholder}
                   maxLength={8}
+                  aria-invalid={Boolean(form.roomCodeError)}
+                  aria-describedby={roomCodeErrorId}
                   className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base uppercase text-login-field-foreground placeholder:text-login-field-placeholder"
                 />
-                {form.roomCodeError && <p className="text-sm text-destructive" role="alert">{form.roomCodeError}</p>}
+                {form.roomCodeError && <p id="login-room-code-error" className="text-sm text-destructive" role="alert">{form.roomCodeError}</p>}
               </div>
 
               <label htmlFor="observer-mode" className="flex cursor-pointer items-center justify-between py-1 text-login-card-foreground">
@@ -205,13 +227,19 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                   <span className="pointer-events-none absolute left-1 size-4 rounded-full bg-login-toggle-thumb transition-transform peer-checked:translate-x-5" />
                 </span>
               </label>
-            </>
+            </section>
           )}
 
-          {status.error && <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">{status.error}</p>}
-          {status.success && <p className="rounded-md bg-login-success/10 px-3 py-2 text-sm text-login-success" role="status">{status.success}</p>}
+          {status.error && <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert" aria-live="assertive">{status.error}</p>}
+          {status.success && <p className="rounded-md bg-login-success/10 px-3 py-2 text-sm text-login-success" role="status" aria-live="polite">{status.success}</p>}
 
-          {form.isRoomStepVisible && <div className="space-y-3 pt-2">
+          {form.isRoomStepVisible && <form
+            className="space-y-3 pt-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              actions.onJoinWithCode();
+            }}
+          >
             <Button
               type="button"
               data-cy="login-create-room"
@@ -222,22 +250,21 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
               {loadingLabel ?? copy.buttons.createRoom}
             </Button>
             <Button
-              type="button"
+              type="submit"
               data-cy="login-join-room"
-              onClick={actions.onJoinWithCode}
               disabled={!status.canJoinWithCode}
               className="h-14 w-full rounded-xl border border-login-card-border bg-login-field text-lg font-semibold text-login-card-foreground hover:bg-login-helper"
             >
               {loadingLabel ?? copy.buttons.joinRoom}
             </Button>
-          </div>}
+          </form>}
         </div>
       </section>
 
       <footer className="mt-8 text-xs text-login-footer" data-cy="login-footer">
         {copy.footer.prefix} <span className="mx-2">{copy.footer.separator}</span> {copy.footer.linkLabel}
       </footer>
-    </div>
+    </article>
   );
 }
 

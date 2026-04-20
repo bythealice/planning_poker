@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { loginCopy } from "@/features/auth/content/login-copy";
 import { roomCode } from "@/features/auth/utils/room-code";
 
 const emailPattern = /[^\s@]+@[^\s@]+\.[^\s@]+/;
@@ -11,7 +12,7 @@ export const loginSchema = z
     email: z
       .string()
       .trim()
-      .refine((value) => value.length === 0 || emailPattern.test(value), "Digite um e-mail valido."),
+      .refine((value) => value.length === 0 || emailPattern.test(value), loginCopy.validation.email),
     password: z.string(),
     roomCode: z
       .string()
@@ -19,7 +20,7 @@ export const loginSchema = z
       .transform(roomCode.normalize)
       .refine(
         (value) => value.length === 0 || roomCode.pattern.test(value),
-        "Use de 4 a 8 caracteres alfanumericos.",
+        loginCopy.validation.roomCode,
       ),
     isObserver: z.boolean(),
   })
@@ -28,7 +29,7 @@ export const loginSchema = z
       context.addIssue({
         code: "custom",
         path: ["name"],
-        message: "Digite seu nome.",
+        message: loginCopy.validation.name,
       });
     }
 
@@ -36,7 +37,7 @@ export const loginSchema = z
       context.addIssue({
         code: "custom",
         path: ["email"],
-        message: "Digite um e-mail para continuar com conta.",
+        message: loginCopy.validation.emailRequiredForAccount,
       });
     }
 
@@ -44,7 +45,7 @@ export const loginSchema = z
       context.addIssue({
         code: "custom",
         path: ["password"],
-        message: "Digite sua senha para entrar.",
+        message: loginCopy.validation.password,
       });
     }
   });
