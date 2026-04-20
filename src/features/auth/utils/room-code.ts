@@ -1,8 +1,8 @@
 const roomCodePattern = /^[A-Z0-9]{4,8}$/;
 const roomCodeAlphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-function normalizeRoomCode(value: string) {
-  return value.trim().toUpperCase();
+function normalizeRoomCode(value: string | null | undefined) {
+  return String(value ?? "").trim().toUpperCase();
 }
 
 export const roomCode = {

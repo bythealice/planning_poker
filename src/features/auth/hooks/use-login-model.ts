@@ -3,7 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
+import { useAuthStore } from "@/core/store";
 import { loginCopy } from "@/features/auth/content/login-copy";
 import { authService } from "@/features/auth/services/auth-api";
 import type { AuthMode } from "@/features/auth/types";
@@ -55,6 +57,8 @@ function wait(ms: number) {
 }
 
 export function useLoginModel() {
+  const router = useRouter();
+  const setSession = useAuthStore((state) => state.setSession);
   const persistedProfile = useMemo(() => readPersistedProfile(), []);
   const defaultValues: LoginFormData = useMemo(
     () => ({
@@ -250,6 +254,7 @@ export function useLoginModel() {
         return;
       }
 
+      setSession(session);
       setIsAuthenticated(true);
     } catch {
       setError(loginCopy.validation.signinFailed);
@@ -272,6 +277,7 @@ export function useLoginModel() {
     updateField("roomCode", generatedCode, true);
 
     setSuccess(loginCopy.messages.created(generatedCode));
+    router.push(`/rooms/${generatedCode}?opened=1`);
   });
 
   const handleJoinWithCode = form.handleSubmit(async ({ roomCode: currentRoomCode, isObserver: observerMode }) => {

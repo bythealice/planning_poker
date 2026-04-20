@@ -8,11 +8,8 @@ describe("Login flow", () => {
     getByCy("login-page").should("be.visible");
   });
 
-  it("creates a mock room and joins with the generated code in no-login mode", () => {
+  it("creates a room from the visitor flow and opens the settings screen", () => {
     visitLogin();
-
-    getByCy("login-create-room").should("be.disabled");
-    getByCy("login-join-room").should("be.disabled");
 
     getByCy("login-name").type("Alice");
     getByCy("login-email").should("not.exist");
@@ -20,27 +17,19 @@ describe("Login flow", () => {
 
     getByCy("login-create-room").should("be.enabled").click();
 
-    cy.contains("Sala mockada criada com sucesso. Codigo:").should("be.visible");
-    getByCy("login-room-code")
-      .invoke("val")
-      .then((value) => {
-        expect(String(value)).to.match(/^[A-Z0-9]{5}$/);
-      });
-
-    getByCy("login-observer-mode").check({ force: true });
-    getByCy("login-join-room").should("be.enabled").click();
-
-    cy.contains("Entrada mockada realizada na sala").should("be.visible");
-    cy.contains("observador").should("be.visible");
+    cy.url().should("match", /\/rooms\/[A-Z0-9]+/);
+    getByCy("room-settings-page").should("be.visible");
+    getByCy("room-code").should("have.attr", "readonly");
+    getByCy("room-apply-settings").should("be.enabled").click();
+    cy.contains("Configurações aplicadas com sucesso.").should("be.visible");
   });
 
-  it("requires email and password first, then unlocks room actions in signin mode", () => {
+  it("shows save as default after sign in and opens the room settings screen", () => {
     visitLogin();
 
     getByCy("login-mode-account").click();
     getByCy("login-name").should("not.exist");
     getByCy("login-room-step").should("not.exist");
-    getByCy("login-create-room").should("not.exist");
 
     getByCy("login-email").type("alice@example.com");
     getByCy("login-password").type("secret123");
@@ -52,9 +41,13 @@ describe("Login flow", () => {
     getByCy("login-email").should("not.exist");
     getByCy("login-password").should("not.exist");
     getByCy("login-room-step").should("be.visible");
-    getByCy("login-room-code").type("AB12");
-    getByCy("login-join-room").should("be.enabled").click();
-    cy.contains("Entrada mockada realizada na sala").should("be.visible");
+    getByCy("login-create-room").should("be.enabled").click();
+
+    cy.url().should("match", /\/rooms\/[A-Z0-9]+/);
+    getByCy("room-settings-page").should("be.visible");
+    getByCy("room-save-default").should("be.visible");
+    getByCy("room-save-default").click();
+    cy.contains("Configurações salvas como padrão com sucesso.").should("be.visible");
   });
 
   it("navigates to create-account screen", () => {
@@ -79,4 +72,3 @@ describe("Login flow", () => {
     getByCy("forgot-password-title").should("contain.text", "Recuperar senha");
   });
 });
-

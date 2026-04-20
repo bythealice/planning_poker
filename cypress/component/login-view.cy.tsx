@@ -44,7 +44,7 @@ describe("LoginView", () => {
     );
 
     getByCy("login-card").should("be.visible");
-    getByCy("login-brand").find("img").should("have.attr", "alt", "Planning Poker");
+    getByCy("login-brand").find("img").should("have.attr", "alt", "Logo do Planning Poker");
     getByCy("login-auth-mode-switch").should("not.exist");
     getByCy("login-signin-step-1").should("not.exist");
     getByCy("login-email").should("not.exist");
@@ -60,7 +60,6 @@ describe("LoginView", () => {
     getByCy("login-join-room").click();
     cy.get("@onJoinWithCode").should("have.been.calledOnce");
 
-    cy.contains("Development by Alice Ramalho").should("be.visible");
+    cy.contains("Desenvolvido por Alice Ramalho").should("be.visible");
   });
 });
-

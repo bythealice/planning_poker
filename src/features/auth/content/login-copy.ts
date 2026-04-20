@@ -1,72 +1,71 @@
 export const loginCopy = {
   brand: {
-	logoSrc: "/LogoName.png",
-	logoAlt: "Planning Poker",
-	logoWidth: 252,
-	logoHeight: 52,
+    logoSrc: "/LogoName.png",
+    logoAlt: "Logo do Planning Poker",
+    logoWidth: 252,
+    logoHeight: 52,
   },
   authMode: {
-	label: "MODO DE ENTRADA",
-	visitor: "Visitante",
-	signin: "Entrar",
-	visitorHint: "Modo rapido para participar com nome e codigo da sala.",
-	signinHint: "Com conta voce ganha acesso seguro e preparo para historico das sessoes.",
+    label: "COMO VOCÊ QUER ENTRAR",
+    visitor: "Visitante",
+    signin: "Entrar",
+    visitorHint: "Modo rápido para participar com nome e código da sala.",
+    signinHint: "Com conta você ganha acesso seguro e histórico das sessões.",
   },
   fields: {
-	name: {
-	  label: "SEU NOME",
-	  placeholder: "Como devemos te chamar?",
-	  helper: "Seu nome fica salvo localmente neste navegador.",
-	},
-	email: {
-	  label: "E-MAIL",
-	  placeholder: "seu@email.com",
-	  helper: "No modo Entrar, e-mail e senha sao obrigatorios.",
-	},
-	password: {
-	  label: "SENHA",
-	  placeholder: "Digite sua senha",
-	},
-	roomCode: {
-	  label: "CODIGO DA SALA",
-	  placeholder: "EX.: 8XJ2K",
-	},
-	observer: {
-	  label: "Entrar como observador",
-	},
+    name: {
+      label: "SEU NOME",
+      placeholder: "Como devemos te chamar?",
+      helper: "Seu nome fica salvo localmente neste navegador.",
+    },
+    email: {
+      label: "E-MAIL",
+      placeholder: "seu@email.com",
+      helper: "No modo entrar, e-mail e senha são obrigatórios.",
+    },
+    password: {
+      label: "SENHA",
+      placeholder: "Digite sua senha",
+    },
+    roomCode: {
+      label: "CÓDIGO DA SALA",
+      placeholder: "EX.: 8XJ2K",
+      helper: "Use o código para copiar e compartilhar com o time.",
+    },
+    observer: {
+      label: "Entrar como observador",
+    },
   },
   buttons: {
-	createRoom: "Criar nova sala",
-	joinRoom: "Entrar com codigo",
-	signIn: "Entrar",
-	createAccount: "Criar conta",
-	forgotPassword: "Esqueci minha senha",
-	loading: "Processando...",
+    createRoom: "Criar sala",
+    joinRoom: "Entrar com código",
+    signIn: "Entrar",
+    createAccount: "Criar conta",
+    forgotPassword: "Esqueci minha senha",
+    loading: "Processando...",
   },
   footer: {
-	prefix: "Development by Alice Ramalho",
-	separator: "•",
-	linkLabel: "© 2026 Planning Poker. All rights reserved",
+    prefix: "Desenvolvido por Alice Ramalho",
+    separator: "•",
+    linkLabel: "© 2026 Planning Poker. Todos os direitos reservados",
   },
   messages: {
-	created: (roomCode: string) => `Sala mockada criada com sucesso. Codigo: ${roomCode}`,
-	joined: (roomCode: string, role: "observador" | "participante") =>
-	  `Entrada mockada realizada na sala ${roomCode} como ${role}.`,
+    created: (roomCode: string) => `Sala criada com sucesso. Código: ${roomCode}`,
+    joined: (roomCode: string, role: "observador" | "participante") =>
+      `Entrada realizada na sala ${roomCode} como ${role}.`,
   },
   validation: {
-	email: "Digite um e-mail valido.",
-	emailRequiredForAccount: "Digite um e-mail para continuar em Entrar.",
-	password: "Digite sua senha para entrar.",
-	passwordRequiredForAccount: "Digite sua senha para continuar em Entrar.",
-	signinSessionInvalid: "Nao foi possivel validar a sessao de login. Tente novamente.",
-	signinFailed: "Nao foi possivel entrar agora. Verifique e-mail e senha e tente novamente.",
-	name: "Digite seu nome.",
-	roomCode: "Use de 4 a 8 caracteres alfanumericos.",
-	roomCodeRequired: "Digite o codigo da sala para entrar.",
-	accountVerificationRequired:
-	  "Antes de criar/entrar em sala, faca login com e-mail e senha.",
+    email: "Digite um e-mail válido.",
+    emailRequiredForAccount: "Digite um e-mail para continuar em Entrar.",
+    password: "Digite sua senha para entrar.",
+    passwordRequiredForAccount: "Digite sua senha para continuar em Entrar.",
+    signinSessionInvalid: "Não foi possível validar a sessão de login. Tente novamente.",
+    signinFailed: "Não foi possível entrar agora. Verifique e-mail e senha e tente novamente.",
+    name: "Digite seu nome.",
+    roomCode: "Use de 4 a 8 caracteres alfanuméricos.",
+    roomCodeRequired: "Digite o código da sala para entrar.",
+    accountVerificationRequired: "Antes de continuar, faça login com e-mail e senha.",
   },
 } as const;
 
 export type LoginCopy = typeof loginCopy;
-
