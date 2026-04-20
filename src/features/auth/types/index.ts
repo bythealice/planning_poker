@@ -1,18 +1,19 @@
-import { z } from "zod";
+export { loginSchema } from "./login-schema";
+export type { LoginFormData } from "./login-schema";
+export { forgotPasswordSchema } from "./forgot-password-schema";
+export type { ForgotPasswordFormData } from "./forgot-password-schema";
+export { signupSchema } from "./signup-schema";
+export type { SignupFormData } from "./signup-schema";
 
-export const loginSchema = z.object({
-  email: z.string().trim().email("Digite um e-mail valido."),
-});
+export type AuthMode = "visitor" | "signin";
 
-export type LoginFormData = z.infer<typeof loginSchema>;
-
-export type AuthSession = {
-  token: string;
+export type SignInSession = {
   email: string;
+  token: string;
 };
 
 export interface AuthRepository {
-  login(email: string): Promise<AuthSession>;
+  signIn(email: string, password: string): Promise<SignInSession>;
 }
 
 
