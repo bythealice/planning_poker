@@ -148,14 +148,10 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 onChange={(event) => actions.onEmailChange(event.target.value)}
                 placeholder={copy.fields.email.placeholder}
                 aria-invalid={Boolean(form.emailError)}
-                aria-describedby={["login-email-helper", emailErrorId].filter(Boolean).join(" ")}
+                aria-describedby={emailErrorId}
                 className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
               />
               {form.emailError && <p id="login-email-error" className="text-sm text-destructive" role="alert">{form.emailError}</p>}
-              <div id="login-email-helper" className="flex items-center gap-2 rounded-md bg-login-helper px-3 py-2 text-sm text-login-helper-foreground">
-                <Info className="size-4 text-login-accent" aria-hidden />
-                <span>{copy.fields.email.helper}</span>
-              </div>
               <label htmlFor="login-password" className="text-xs font-semibold tracking-[0.16em] text-login-label">
                 {copy.fields.password.label}
               </label>
@@ -171,18 +167,27 @@ export function LoginView({ copy, form, status, actions }: LoginViewProps) {
                 className="h-14 rounded-xl border-login-card-border bg-login-field px-4 text-base text-login-field-foreground placeholder:text-login-field-placeholder"
               />
               {form.passwordError && <p id="login-password-error" className="text-sm text-destructive" role="alert">{form.passwordError}</p>}
+              <div className="flex justify-end">
+                <Link
+                  href="#"
+                  data-cy="login-forgot-password-link"
+                  className="text-xs text-login-footer underline-offset-4 hover:text-login-card-foreground hover:underline"
+                >
+                  {copy.buttons.forgotPassword}
+                </Link>
+              </div>
               <Button
                 type="submit"
                 data-cy="login-signin"
                 disabled={!status.canSignIn}
-                className="h-11 w-full rounded-lg border border-login-card-border bg-login-field text-login-card-foreground hover:bg-login-helper"
+                className="h-14 w-full rounded-xl bg-login-accent text-lg font-semibold text-login-accent-foreground hover:bg-login-accent/90"
               >
                 {loadingLabel ?? copy.buttons.signIn}
               </Button>
               <Link
                 href="/signup"
                 data-cy="login-create-account-link"
-                className="block text-center text-sm text-login-accent underline-offset-4 hover:underline"
+                className="flex h-12 w-full items-center justify-center rounded-xl border border-login-card-border bg-login-field text-base font-semibold text-login-card-foreground transition-colors hover:bg-login-helper"
               >
                 {copy.buttons.createAccount}
               </Link>

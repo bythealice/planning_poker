@@ -10,7 +10,7 @@ export const loginCopy = {
 	visitor: "Visitante",
 	signin: "Entrar",
 	visitorHint: "Modo rapido para participar com nome e codigo da sala.",
-	signinHint: "Entre com e-mail e senha. Depois de autenticar, voce libera as acoes de sala.",
+	signinHint: "Com conta voce ganha acesso seguro e preparo para historico das sessoes.",
   },
   fields: {
 	name: {
@@ -40,6 +40,7 @@ export const loginCopy = {
 	joinRoom: "Entrar com codigo",
 	signIn: "Entrar",
 	createAccount: "Criar conta",
+	forgotPassword: "Esqueci minha senha",
 	loading: "Processando...",
   },
   footer: {
